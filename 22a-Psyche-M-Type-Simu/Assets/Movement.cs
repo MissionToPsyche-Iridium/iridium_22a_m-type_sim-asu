@@ -4,51 +4,25 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    //float speed = 5;
+    float speed = 5;
+    Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(new Vector3(.05f, 0, 0) * Time.deltaTime * speed);
-            
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(new Vector3(-.05f, 0, 0) * Time.deltaTime * speed);
-        } */
+        float HoriMove = Input.GetAxisRaw("Horizontal") * speed;
+        float VertMove = Input.GetAxisRaw("Vertical") * speed;
+        rb.velocity = new Vector3(HoriMove, rb.velocity.y, VertMove);
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(100, 0, 0) * Time.deltaTime);
+        if(Input.GetButtonDown("Jump") && Mathf.Approximately(rb.velocity.y, 0)) 
+            rb.velocity = new Vector3(rb.velocity.x, 5, rb.velocity.z);
 
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(-100, 0, 0) * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(0, 0, -100) * Time.deltaTime);
-
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(0, 0, 100) * Time.deltaTime);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(0, 10, 0), ForceMode.Impulse);
-        }
     }
-
 }
 
