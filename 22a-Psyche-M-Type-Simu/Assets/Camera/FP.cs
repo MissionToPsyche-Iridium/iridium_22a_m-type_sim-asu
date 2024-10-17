@@ -22,8 +22,8 @@ public class FP : MonoBehaviour
     {
         transform.position = Player.position;
 
-        if (Input.GetMouseButton(0))
-        {
+        if (Input.GetMouseButton(1))
+        { 
             LocalRotation.x += Input.GetAxis("Mouse X") * MouseSpeed;
             LocalRotation.y -= Input.GetAxis("Mouse Y") * MouseSpeed;
 
@@ -32,5 +32,15 @@ public class FP : MonoBehaviour
             Quaternion qt = Quaternion.Euler(LocalRotation.y, LocalRotation.x, 0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, qt, Time.deltaTime * orbitalDampen);
         }
+        /*
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z + .5f);
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z - .5f);
+        }
+        */
     }
 }

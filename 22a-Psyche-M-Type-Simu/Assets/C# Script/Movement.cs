@@ -20,7 +20,7 @@ public class Movement : MonoBehaviour
         float VertMove = Input.GetAxisRaw("Vertical") * speed;
         rb.velocity = new Vector3(HoriMove, rb.velocity.y, VertMove);
 
-        if(Input.GetButtonDown("Jump") && Mathf.Approximately(rb.velocity.y, 0)) 
+        if (Input.GetButtonDown("Jump") && Mathf.Approximately(rb.velocity.y, 0))
             rb.velocity = new Vector3(rb.velocity.x, 5, rb.velocity.z);
 
     }
