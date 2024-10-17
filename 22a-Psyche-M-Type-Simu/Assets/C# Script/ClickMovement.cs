@@ -18,13 +18,13 @@ public class ClickMovement : MonoBehaviour
     void Update()
     {
         // Handle mouse input
-        if (Input.GetMouseButtonDown(0)) // Left mouse button press
+        if (Input.GetMouseButtonDown(1)) // Left mouse button press
         {
             pressTime = Time.time; // Record the time when pressed
             isPressing = true; // Start pressing
         }
 
-        if (Input.GetMouseButton(0) && isPressing) // While the button is held down
+        if (Input.GetMouseButton(1) && isPressing) // While the button is held down
         {
             // Check if hold duration exceeded
             if (Time.time - pressTime > holdDuration)
@@ -33,7 +33,7 @@ public class ClickMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && isPressing) // On mouse button release
+        if (Input.GetMouseButtonUp(1) && isPressing) // On mouse button release
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

@@ -44,10 +44,10 @@ public class CameraControls : MonoBehaviour
             10 * Time.deltaTime);
 
         // activate orbit mode on right-click
-        if (Input.GetMouseButtonDown(1)) {
+        if (Input.GetMouseButtonDown(0)) {
             isOrbiting = true; 
         }
-        if(Input.GetMouseButtonUp(1)) {
+        if(Input.GetMouseButtonUp(0)) {
             isOrbiting = false;
         }
 
