@@ -5,6 +5,7 @@ public class RockTexturizer : EditorWindow
 {
     public Material sharedMaterial;
     public string objectTag = "YourTag";
+    public Vector2 textureTiling = new Vector2(1, 1);  // New tiling field
 
     [MenuItem("Tools/Apply Texture to Objects")]
     public static void ShowWindow()
@@ -17,6 +18,7 @@ public class RockTexturizer : EditorWindow
         GUILayout.Label("Apply Texture to Multiple Objects", EditorStyles.boldLabel);
         sharedMaterial = (Material)EditorGUILayout.ObjectField("Material", sharedMaterial, typeof(Material), false);
         objectTag = EditorGUILayout.TextField("Object Tag", objectTag);
+        textureTiling = EditorGUILayout.Vector2Field("Texture Tiling", textureTiling);  // Add tiling control
 
         if (GUILayout.Button("Apply Texture"))
         {
@@ -32,6 +34,9 @@ public class RockTexturizer : EditorWindow
             return;
         }
 
+        // Set the tiling on the shared material itself
+        sharedMaterial.mainTextureScale = textureTiling;
+
         GameObject[] objects = GameObject.FindGameObjectsWithTag(objectTag);
         foreach (GameObject obj in objects)
         {
@@ -39,7 +44,7 @@ public class RockTexturizer : EditorWindow
             if (renderer != null)
             {
                 renderer.sharedMaterial = sharedMaterial;
-                EditorUtility.SetDirty(obj); 
+                EditorUtility.SetDirty(obj);
             }
         }
 
