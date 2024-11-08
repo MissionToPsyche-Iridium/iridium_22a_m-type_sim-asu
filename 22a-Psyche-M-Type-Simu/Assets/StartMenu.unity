@@ -1468,7 +1468,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -393, y: 319}
+  m_AnchoredPosition: {x: -833, y: 437}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &887782751
@@ -1649,7 +1649,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -393, y: 319}
+  m_AnchoredPosition: {x: -833, y: 437}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &903803206
@@ -2607,7 +2607,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -393, y: 319}
+  m_AnchoredPosition: {x: -833, y: 437}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1183764642
@@ -3451,10 +3451,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1500656576}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 312}
-  m_SizeDelta: {x: 202.3204, y: 62.7623}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1250, y: -750}
+  m_SizeDelta: {x: 1250, y: 1000}
   m_Pivot: {x: 0.6663004, y: 0.5}
 --- !u!114 &1583369924
 MonoBehaviour:
@@ -3476,9 +3476,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Disclaimer
+  m_text: "This work was created in partial fulfillment of Arizona State University
+    Capstone Course \u201C423\u2033. The work is a result of the Psyche Student Collaborations
+    component of NASA\u2019s Psyche Mission (https://psyche.asu.edu). \u201CPsyche:
+    A Journey to a Metal World\u201D [Contract number NNM16AA09C] is part of the
+    NASA Discovery Program mission to solar system targets. Trade names and trademarks
+    of ASU and NASA are used in this work for identification only. Their usage does
+    not constitute an official endorsement, either expressed or implied, by Arizona
+    State University or National Aeronautics and Space Administration. The content
+    is solely the responsibility of the authors and does not necessarily represent
+    the official views of ASU or NASA.\r\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 31a2c8bbf15a4a04a9b765fde9253043, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -3509,13 +3518,13 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 40
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -3542,7 +3551,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -64.97168, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1583369925
