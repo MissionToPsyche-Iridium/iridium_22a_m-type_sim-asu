@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    /*
     float speed = 5;
     Rigidbody rb;
 
@@ -24,5 +25,6 @@ public class Movement : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, 5, rb.velocity.z);
 
     }
+    */
 }
 
