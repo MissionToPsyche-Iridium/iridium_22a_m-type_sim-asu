@@ -99,11 +99,14 @@ public class ClickMovement : MonoBehaviour
     }
     */
     //using UnityEngine;
-    public float rotationSpeed = 5f; // How fast the object rotates to face the target
-    public float moveSpeed = 5f;     // How fast the object moves to the target
-    public Vector3 targetPosition;  // The target position to move to
-    private bool isMoving = false;   // Whether the object is moving or rotating
-    private float distanceThreshold = 1.5f; // Threshold to consider movement as complete
+
+    //beofre we used physics variable to push the robot, but would mess up the physics and flip the rover over constantly,
+    //now we will not use this so we can have better player physics when on the surface of the asteroid and to not hurt the user experience
+    public float rotationSpeed = 5f; //rotation speed when moving
+    public float moveSpeed = 5f; //robot speed
+    public Vector3 targetPosition; //robot position to go to
+    private bool isMoving = false; 
+    private float distanceThreshold = 1f; //threshold to consider movement as complete
     private Rigidbody rb;
 
     void Start()
@@ -112,13 +115,13 @@ public class ClickMovement : MonoBehaviour
     }
     void Update()
     {
-        // Check for right-click and set the target position
-        if (Input.GetMouseButtonDown(1)) // Right-click
+        //when mouse input is right-click
+        if (Input.GetMouseButtonDown(1))
         {
             SetTargetPosition();
         }
 
-        // If the object is moving, rotate it smoothly toward the target
+        //if the object is moving then rotate towards target
         if (isMoving)
         {
             RotateTowardsTarget();
@@ -140,13 +143,13 @@ public class ClickMovement : MonoBehaviour
 
     void RotateTowardsTarget()
     {
-        // Calculate the direction to the target
+        //calculates the direction to the target
         Vector3 directionToTarget = targetPosition - transform.position;
-        directionToTarget.y = 0; // Keep rotation on the horizontal plane
+        directionToTarget.y = 0; //keeps rotation on the x and z axis exclusively
 
         if (directionToTarget.magnitude > distanceThreshold)
         {
-            // Smoothly rotate towards the target using Quaternion.Slerp
+            //smoothly rotate towards the target with Quaternion.Slerp
             Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
@@ -167,7 +170,7 @@ public class ClickMovement : MonoBehaviour
         }
         else
         {
-            // Once the object reaches the target, stop moving
+            //once destination is reached, stop
             isMoving = false;
         }
     }
