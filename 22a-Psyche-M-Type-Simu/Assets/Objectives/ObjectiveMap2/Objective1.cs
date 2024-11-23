@@ -7,7 +7,7 @@ public class Objective1 : MonoBehaviour
 {
     public GameObject ObjectiveTextObject;
     public TextMeshProUGUI ObjectiveText;
-    [SerializeField] public string Description = "Move to the marker";
+    [SerializeField] public string Description;
     [SerializeField] public bool Complete; // Completion status
     public GameObject CompletedText;
 
@@ -17,17 +17,17 @@ public class Objective1 : MonoBehaviour
 
         if (ObjectiveText != null)
         {
-            ObjectiveText.text = Description;
+            ObjectiveText.text = Description.ToString();
         }
 
         if (ObjectiveTextObject != null)
         {
-            ObjectiveTextObject.SetActive(true);
+            ObjectiveTextObject.SetActive(true); 
         }
 
         if (CompletedText != null)
         {
-            CompletedText.SetActive(false);
+            CompletedText.SetActive(false); 
         }
     }
 }

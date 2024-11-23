@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-
 public class Objective1Complete : MonoBehaviour
 {
     public bool Complete;
@@ -14,7 +13,7 @@ public class Objective1Complete : MonoBehaviour
     {
         if (Text != null)
         {
-            Text.text = "";
+
         }
     }
 
@@ -22,7 +21,6 @@ public class Objective1Complete : MonoBehaviour
     {
         if (other.CompareTag("Player") && !Complete)
         {
-            Debug.Log("Player collided with the objective marker!");
             Complete = true; // Mark as complete
             Text.text = TextComplete; // Display completion message
             StartCoroutine(WaitForSec());
@@ -39,3 +37,4 @@ public class Objective1Complete : MonoBehaviour
         Destroy(this.gameObject);
     }
 }
+
