@@ -6,15 +6,15 @@ using TMPro;
 
 public class Objective1Complete : MonoBehaviour
 {
-    public bool Complete; 
-    public string TextComplete = "Objective Complete!"; 
-    public TextMeshProUGUI Text; 
+    public bool Complete;
+    public string TextComplete = "Objective Complete!";
+    public TextMeshProUGUI Text;
 
     void Start()
     {
         if (Text != null)
         {
-            Text.text = ""; 
+            Text.text = "";
         }
     }
 
@@ -22,20 +22,20 @@ public class Objective1Complete : MonoBehaviour
     {
         if (other.CompareTag("Player") && !Complete)
         {
+            Debug.Log("Player collided with the objective marker!");
             Complete = true; // Mark as complete
             Text.text = TextComplete; // Display completion message
-            StartCoroutine(WaitForSec()); 
+            StartCoroutine(WaitForSec());
         }
     }
 
     public IEnumerator WaitForSec()
     {
-        yield return new WaitForSeconds(1); 
+        yield return new WaitForSeconds(2);
         if (Text != null)
         {
-            DestroyImmediate(Text.gameObject); // Destroy the text UI object
+            Destroy(Text.gameObject); // Destroy the text UI object
         }
-        Destroy(this.gameObject); 
+        Destroy(this.gameObject);
     }
 }
-

@@ -5,11 +5,11 @@ using TMPro;
 
 public class Objective1 : MonoBehaviour
 {
-    public GameObject ObjectiveTextObject; 
-    public TextMeshProUGUI ObjectiveText; 
-    [SerializeField] public string Description = "Move to the marker"; 
+    public GameObject ObjectiveTextObject;
+    public TextMeshProUGUI ObjectiveText;
+    [SerializeField] public string Description = "Move to the marker";
     [SerializeField] public bool Complete; // Completion status
-    public GameObject CompletedText; // Reference to a "Completed" text GameObject (optional)
+    public GameObject CompletedText;
 
     void Start()
     {
@@ -17,17 +17,17 @@ public class Objective1 : MonoBehaviour
 
         if (ObjectiveText != null)
         {
-            ObjectiveText.text = Description; 
+            ObjectiveText.text = Description;
         }
 
         if (ObjectiveTextObject != null)
         {
-            ObjectiveTextObject.SetActive(true); 
+            ObjectiveTextObject.SetActive(true);
         }
 
         if (CompletedText != null)
         {
-            CompletedText.SetActive(false); 
+            CompletedText.SetActive(false);
         }
     }
 }
