@@ -5,8 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuSelect : MonoBehaviour
 {
-   public void StartClicked()
+   public void StartMission1Clicked()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+    public void StartMission2Clicked()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
     }
 }

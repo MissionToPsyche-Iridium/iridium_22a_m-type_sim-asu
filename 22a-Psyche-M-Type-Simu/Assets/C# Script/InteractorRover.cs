@@ -17,7 +17,7 @@ public class InteractorRover : MonoBehaviour
     [SerializeField] GameObject Status2;
     [SerializeField] GameObject Status3;
     [SerializeField] GameObject StatusComplete;
-
+    [SerializeField] GameObject ControlPrompt;
 
     private readonly Collider[] RovColliders = new Collider[3];
     [SerializeField] private int numInteractFound;
@@ -41,8 +41,11 @@ public class InteractorRover : MonoBehaviour
         {
             var interactable = RovColliders[0].GetComponent<IInteractable>();
 
+            ControlPrompt.SetActive(true);
+
             if (interactable != null && Input.GetKey(KeyCode.E))
             {
+                ControlPrompt.SetActive(false);
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
 
@@ -54,7 +57,7 @@ public class InteractorRover : MonoBehaviour
 
                 StartCoroutine(DisableMovementForSeconds(4));
 
-                if (interactionCount >= 2)
+                if (interactionCount >= 4)
                 {
                     StartCoroutine(LevelCompleteRoutine());
                 }
