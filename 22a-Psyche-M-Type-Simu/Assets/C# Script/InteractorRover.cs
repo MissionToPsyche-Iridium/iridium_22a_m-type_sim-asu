@@ -1,0 +1,91 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.DebugUI;
+
+public class InteractorRover : MonoBehaviour
+{
+    public Animator animator;
+    // Start is called before the first frame update
+    [SerializeField] private Transform interactionP;
+    [SerializeField] private float interactionR = 0.5f;
+    [SerializeField] private LayerMask interactionM;
+    [SerializeField] GameObject LevelCompleteScreen;
+    [SerializeField] GameObject Status0;
+    [SerializeField] GameObject Status1;
+    [SerializeField] GameObject Status2;
+    [SerializeField] GameObject Status3;
+    [SerializeField] GameObject StatusComplete;
+
+
+    private readonly Collider[] RovColliders = new Collider[3];
+    [SerializeField] private int numInteractFound;
+
+    //counts the number of interactions the rover has had
+    private int interactionCount = 0;
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        Status0.SetActive(true);
+    }
+
+    private void Update()
+    {
+        numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
+
+        if(numInteractFound > 0)
+        {
+            var interactable = RovColliders[0].GetComponent<IInteractable>();
+
+            if (interactable != null && Input.GetKey(KeyCode.E))
+            {
+                interactable.Interact(this);
+                animator.SetTrigger("ActivateDrill");
+
+                RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+
+                interactionCount++;
+                missionStatus(interactionCount);
+                Debug.Log(interactionCount);
+
+                if (interactionCount >= 2)
+                {
+                    Debug.Log("Level complete"); //level completed
+
+                    LevelCompleteScreen.SetActive(true);
+                    Time.timeScale = 0f;
+                }
+            }
+        }
+    }
+    private void missionStatus(int interactionCount)
+    {
+        //mission progress text, changes as the mission progresses\
+        switch (interactionCount)
+        {
+            case 1:
+                Status0.SetActive(false);
+                Status1.SetActive(true);
+                break;
+            case 2:
+                Status1.SetActive(false);
+                Status2.SetActive(true);
+                break;
+            case 3:
+                Status2.SetActive(false);
+                Status3.SetActive(true);
+                break;
+            default:
+                Status3.SetActive(false);
+                StatusComplete.SetActive(true);
+                break;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(interactionP.position, interactionR);
+    }
+}
