@@ -24,6 +24,12 @@ public class CameraControls : MonoBehaviour
     private float currentYRotation; // y-axis rotation angle (pitch)
     private float currentXRotation; // x-axis rotation angle (yaw)
 
+    //camera controller options function
+    public void OptionsCameraSpeed (float newSpeed)
+    {
+        rotationSpeed = newSpeed;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
