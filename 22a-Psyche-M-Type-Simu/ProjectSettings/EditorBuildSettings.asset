@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Psyche-Crater-Mission.unity
     guid: 7a29a2f19a2e02f4ca7b33c1a76e57b3
+  - enabled: 1
+    path: Assets/PlaceHolderLevel2.unity
+    guid: ecf1933d2f7134f4ca1e28ee07966347
   m_configObjects: {}

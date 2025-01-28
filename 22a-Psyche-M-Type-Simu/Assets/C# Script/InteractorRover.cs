@@ -21,6 +21,7 @@ public class InteractorRover : MonoBehaviour
 
     private readonly Collider[] RovColliders = new Collider[3];
     [SerializeField] private int numInteractFound;
+    [SerializeField] private MonoBehaviour movementScript;
 
     //counts the number of interactions the rover has had
     private int interactionCount = 0;
@@ -28,6 +29,8 @@ public class InteractorRover : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         Status0.SetActive(true);
+
+        StartCoroutine(DisableMovementForSeconds(3));
     }
 
     private void Update()
@@ -49,16 +52,36 @@ public class InteractorRover : MonoBehaviour
                 missionStatus(interactionCount);
                 Debug.Log(interactionCount);
 
+                StartCoroutine(DisableMovementForSeconds(4));
+
                 if (interactionCount >= 2)
                 {
-                    Debug.Log("Level complete"); //level completed
-
-                    LevelCompleteScreen.SetActive(true);
-                    Time.timeScale = 0f;
+                    StartCoroutine(LevelCompleteRoutine());
                 }
             }
         }
     }
+
+    private IEnumerator DisableMovementForSeconds(float seconds)
+    {
+        if (movementScript != null)
+        {
+            movementScript.enabled = false;
+
+            yield return new WaitForSeconds(seconds);
+
+            movementScript.enabled = true;
+        }
+    }
+
+    private IEnumerator LevelCompleteRoutine()
+    {
+        Debug.Log("Level complete"); 
+        yield return new WaitForSeconds(3); //lets animation play for 3 secnds
+        LevelCompleteScreen.SetActive(true); 
+        Time.timeScale = 0f; //pauses further action
+    }
+
     private void missionStatus(int interactionCount)
     {
         //mission progress text, changes as the mission progresses\
