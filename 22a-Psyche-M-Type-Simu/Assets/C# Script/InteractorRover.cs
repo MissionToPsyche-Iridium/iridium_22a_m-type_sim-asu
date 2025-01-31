@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.Rendering.DebugUI;
@@ -15,6 +16,8 @@ public class InteractorRover : MonoBehaviour
     [SerializeField] GameObject Status0;
     [SerializeField] GameObject Status1;
     [SerializeField] GameObject Status2;
+    [SerializeField] Camera drillCamera; // Reference to the drill camera
+    [SerializeField] RawImage drillCameraUI; // Reference to the UI panel
     [SerializeField] GameObject Status3;
     [SerializeField] GameObject StatusComplete;
     [SerializeField] GameObject ControlPrompt;
@@ -27,10 +30,33 @@ public class InteractorRover : MonoBehaviour
     private int interactionCount = 0;
     private void Start()
     {
+        if (drillCamera != null && drillCameraUI != null)
+        {
+            drillCamera.enabled = false; // Disable the drill camera initially
+            drillCameraUI.gameObject.SetActive(false); // Hide the UI panel
+        }
         animator = GetComponent<Animator>();
         Status0.SetActive(true);
 
         StartCoroutine(DisableMovementForSeconds(3));
+    }
+
+    private void ShowDrillCamera()
+    {
+        if (drillCamera != null && drillCameraUI != null)
+        {
+            drillCamera.enabled = true; // Enable the drill camera
+            drillCameraUI.gameObject.SetActive(true); // Show the UI panel
+        }
+    }
+
+    private void HideDrillCamera()
+    {
+        if (drillCamera != null && drillCameraUI != null)
+        {
+            drillCamera.enabled = false; // Disable the drill camera
+            drillCameraUI.gameObject.SetActive(false); // Hide the UI panel
+        }
     }
 
     private void Update()
@@ -49,13 +75,16 @@ public class InteractorRover : MonoBehaviour
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
 
+                // Show the drill camera view
+                ShowDrillCamera();
+
                 RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
 
                 interactionCount++;
                 missionStatus(interactionCount);
                 Debug.Log(interactionCount);
 
-                StartCoroutine(DisableMovementForSeconds(4));
+                StartCoroutine(DisableMovementForSeconds(6));
 
                 if (interactionCount >= 4)
                 {
@@ -74,6 +103,9 @@ public class InteractorRover : MonoBehaviour
             yield return new WaitForSeconds(seconds);
 
             movementScript.enabled = true;
+
+            // Hide the drill camera view after movement resumes
+            HideDrillCamera();
         }
     }
 
