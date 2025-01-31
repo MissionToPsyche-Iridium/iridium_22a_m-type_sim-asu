@@ -92,6 +92,10 @@ public class InteractorRover : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            ControlPrompt.SetActive(false);
+        }
     }
 
     private IEnumerator DisableMovementForSeconds(float seconds)
