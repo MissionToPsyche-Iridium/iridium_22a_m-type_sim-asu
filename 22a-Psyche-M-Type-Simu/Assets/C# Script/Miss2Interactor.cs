@@ -12,18 +12,14 @@ public class Miss2Interactor : MonoBehaviour
     [SerializeField] private Transform interactionP;
     [SerializeField] private float interactionR = 0.5f;
     [SerializeField] private LayerMask interactionM;
-    /*
-    [SerializeField] GameObject LevelCompleteScreen;
-    [SerializeField] GameObject Status0;
-    [SerializeField] GameObject Status1;
-    [SerializeField] GameObject Status2;
-    [SerializeField] GameObject Status3;
-    [SerializeField] GameObject StatusComplete;
-    */
     [SerializeField] GameObject ControlPrompt;
     private readonly Collider[] RovColliders = new Collider[3];
     [SerializeField] private int numInteractFound;
     [SerializeField] private MonoBehaviour movementScript;
+
+    public Camera mainCamera;
+    public Camera camMode;
+    private bool isCamModeActive = false;
 
     //counts the number of interactions the rover has had
     private int interactionCount = 0;
@@ -31,6 +27,8 @@ public class Miss2Interactor : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         //Status0.SetActive(true);
+        mainCamera.enabled = true;
+        camMode.enabled = false;
 
         StartCoroutine(DisableMovementForSeconds(3));
     }
@@ -55,10 +53,14 @@ public class Miss2Interactor : MonoBehaviour
                 interactable.Interact(this);
 
                 //starts drill animation
-                animator.SetTrigger("ActivateDrill");
+                animator.SetTrigger("CameraActiv");
+
+                mainCamera.enabled = false;
+                camMode.enabled = true;
+                isCamModeActive = true;
 
                 //changed the selected object to change layers to prevent being selected again
-                RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+
 
                 //update objective UI in the left corner
                 interactionCount++;
@@ -74,12 +76,45 @@ public class Miss2Interactor : MonoBehaviour
                     StartCoroutine(LevelCompleteRoutine());
                 }
             }
+            else if (numInteractFound > 0 && Input.GetKey(KeyCode.R) && isCamModeActive == true) {
+                camMode.enabled = false;
+                mainCamera.enabled = true;
+                isCamModeActive = false;
+
+                RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+            }
         }
         else
         {
             //disables display UI for what key to press and ensures it remains off till needed
             ControlPrompt.SetActive(false);
         }
+    }
+
+    void SwitchToCamMode()
+    {
+        mainCamera.enabled = false;
+        camMode.enabled = true;
+        isCamModeActive = true;
+
+        RaycastHit hit;
+        if (Physics.Raycast(camMode.transform.position, camMode.transform.forward, out hit))
+        {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Photograph"))
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    hit.collider.gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+
+                    camMode.enabled = false;
+                    mainCamera.enabled = true;
+                    isCamModeActive = false;
+                    RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+                }
+            }
+        }
+
+
     }
 
     private IEnumerator DisableMovementForSeconds(float seconds)
