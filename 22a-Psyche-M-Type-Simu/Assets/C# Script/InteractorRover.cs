@@ -9,26 +9,26 @@ public class InteractorRover : MonoBehaviour
 {
     public Animator animator;
     // Start is called before the first frame update
-    [SerializeField] private Transform interactionP;
-    [SerializeField] private float interactionR = 0.5f;
-    [SerializeField] private LayerMask interactionM;
-    [SerializeField] GameObject LevelCompleteScreen;
-    [SerializeField] GameObject Status0;
-    [SerializeField] GameObject Status1;
-    [SerializeField] GameObject Status2;
-    [SerializeField] Camera drillCamera; // Reference to the drill camera
-    [SerializeField] RawImage drillCameraUI; // Reference to the UI panel
-    [SerializeField] GameObject Status3;
-    [SerializeField] GameObject StatusComplete;
-    [SerializeField] GameObject ControlPrompt;
+    [SerializeField] protected Transform interactionP;
+    [SerializeField] protected float interactionR = 0.5f;
+    [SerializeField] protected LayerMask interactionM;
+    [SerializeField] protected GameObject LevelCompleteScreen;
+    [SerializeField] protected GameObject Status0;
+    [SerializeField] protected GameObject Status1;
+    [SerializeField] protected GameObject Status2;
+    [SerializeField] protected Camera drillCamera; // Reference to the drill camera
+    [SerializeField] protected RawImage drillCameraUI; // Reference to the UI panel
+    [SerializeField] protected GameObject Status3;
+    [SerializeField] protected GameObject StatusComplete;
+    [SerializeField] protected GameObject ControlPrompt;
 
-    private readonly Collider[] RovColliders = new Collider[3];
-    [SerializeField] private int numInteractFound;
-    [SerializeField] private MonoBehaviour movementScript;
+    protected readonly Collider[] RovColliders = new Collider[3];
+    [SerializeField] protected int numInteractFound;
+    [SerializeField] protected MonoBehaviour movementScript;
 
     //counts the number of interactions the rover has had
-    private int interactionCount = 0;
-    private void Start()
+    protected int interactionCount = 0;
+    protected void Start()
     {
         if (drillCamera != null && drillCameraUI != null)
         {
@@ -41,7 +41,7 @@ public class InteractorRover : MonoBehaviour
         StartCoroutine(DisableMovementForSeconds(3));
     }
 
-    private void ShowDrillCamera()
+    protected void ShowDrillCamera()
     {
         if (drillCamera != null && drillCameraUI != null)
         {
@@ -50,7 +50,7 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    private void HideDrillCamera()
+    protected void HideDrillCamera()
     {
         if (drillCamera != null && drillCameraUI != null)
         {
@@ -59,7 +59,7 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
 
@@ -98,7 +98,7 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    private IEnumerator DisableMovementForSeconds(float seconds)
+    protected IEnumerator DisableMovementForSeconds(float seconds)
     {
         if (movementScript != null)
         {
@@ -113,7 +113,7 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    private IEnumerator LevelCompleteRoutine()
+    protected virtual IEnumerator LevelCompleteRoutine()
     {
         Debug.Log("Level complete"); 
         yield return new WaitForSeconds(3); //lets animation play for 3 secnds
@@ -121,7 +121,7 @@ public class InteractorRover : MonoBehaviour
         Time.timeScale = 0f; //pauses further action
     }
 
-    private void missionStatus(int interactionCount)
+    protected virtual void missionStatus(int interactionCount)
     {
         //mission progress text, changes as the mission progresses\
         switch (interactionCount)
@@ -145,7 +145,7 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(interactionP.position, interactionR);
