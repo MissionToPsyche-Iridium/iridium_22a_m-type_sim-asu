@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class RockTagger : EditorWindow
 {
     public string tagToApply = "Rock";
@@ -50,3 +51,4 @@ public class RockTagger : EditorWindow
         }
     }
 }
+#endif

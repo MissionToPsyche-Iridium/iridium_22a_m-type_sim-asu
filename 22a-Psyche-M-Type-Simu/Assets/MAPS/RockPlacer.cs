@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
+#if UNITY_EDITOR
 public class RockPlacer : EditorWindow
 {
     public GameObject[] rockPrefabs;
@@ -92,3 +93,4 @@ public class RockPlacer : EditorWindow
         Debug.Log("Rocks placed successfully!");
     }
 }
+#endif
