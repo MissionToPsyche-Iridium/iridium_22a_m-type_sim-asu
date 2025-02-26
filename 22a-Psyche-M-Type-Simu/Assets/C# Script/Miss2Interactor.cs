@@ -17,9 +17,12 @@ public class Miss2Interactor : MonoBehaviour
     [SerializeField] private int numInteractFound;
     [SerializeField] private MonoBehaviour movementScript;
 
-    public Camera mainCamera;
-    public Camera camMode;
+    [SerializeField] public Camera mainCamera;
+    [SerializeField] public Camera camMode;
     private bool isCamModeActive = false;
+
+    [SerializeField] private GameObject target1;
+
 
     //counts the number of interactions the rover has had
     private int interactionCount = 0;
@@ -30,7 +33,7 @@ public class Miss2Interactor : MonoBehaviour
         mainCamera.enabled = true;
         camMode.enabled = false;
 
-        StartCoroutine(DisableMovementForSeconds(3));
+        //StartCoroutine(DisableMovementForSeconds(3));
     }
 
     private void Update()
@@ -52,36 +55,36 @@ public class Miss2Interactor : MonoBehaviour
                 //selects interactable object
                 interactable.Interact(this);
 
-                //starts drill animation
+                //starts camera animation
                 animator.SetTrigger("CameraActiv");
 
                 mainCamera.enabled = false;
                 camMode.enabled = true;
                 isCamModeActive = true;
 
-                //changed the selected object to change layers to prevent being selected again
-
-
-                //update objective UI in the left corner
-                interactionCount++;
-                missionStatus(interactionCount);
-                Debug.Log(interactionCount);
-
                 //disables movement till animation is complete
-                StartCoroutine(DisableMovementForSeconds(6));
+                movementScript.enabled = false;
 
                 //check if all objectives have been completed
-                if (interactionCount >= 4)
-                {
-                    StartCoroutine(LevelCompleteRoutine());
-                }
+                
             }
             else if (numInteractFound > 0 && Input.GetKey(KeyCode.R) && isCamModeActive == true) {
-                camMode.enabled = false;
-                mainCamera.enabled = true;
-                isCamModeActive = false;
 
-                RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+                bool visibility = visCheck();
+
+                if (visibility)
+                {
+                    camMode.enabled = false;
+                    mainCamera.enabled = true;
+                    isCamModeActive = false;
+                    movementScript.enabled = true;
+
+                    RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+
+                    interactionCount++;
+                    missionStatus(interactionCount);
+                    Debug.Log(interactionCount);
+                }
             }
         }
         else
@@ -89,6 +92,24 @@ public class Miss2Interactor : MonoBehaviour
             //disables display UI for what key to press and ensures it remains off till needed
             ControlPrompt.SetActive(false);
         }
+        if (interactionCount >= 2)
+        {
+            StartCoroutine(LevelCompleteRoutine());
+        }
+    }
+
+    private bool visCheck()
+    {
+        Renderer renderer = target1.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            // Check if the object's color is green
+            if (renderer.sharedMaterial.color.Equals(Color.green))
+            {
+                return true; // Return true if the object is green
+            }
+        }
+        return false;
     }
 
     void SwitchToCamMode()

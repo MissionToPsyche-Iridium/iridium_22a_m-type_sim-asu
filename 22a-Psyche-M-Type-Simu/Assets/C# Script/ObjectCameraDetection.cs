@@ -5,30 +5,30 @@ using UnityEngine;
 public class ObjectCameraDetection : MonoBehaviour
 {
     // Start is called before the first frame update
-    Camera camera;
-    MeshRenderer renderer;
+    [SerializeField] Camera camera2;
+    MeshRenderer rendererV;
     Plane[] CameraFrustum;
-    Collider collider;
+    Collider colliderV;
 
     void Start()
     {
-        camera = Camera.main;
-        renderer = GetComponent<MeshRenderer>();
-        collider = GetComponent<Collider>();
+        //camera = Camera.main;
+        rendererV = GetComponent<MeshRenderer>();
+        colliderV = GetComponent<Collider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        var bounds = collider.bounds;
-        CameraFrustum = GeometryUtility.CalculateFrustumPlanes(camera);
+        var bounds = colliderV.bounds;
+        CameraFrustum = GeometryUtility.CalculateFrustumPlanes(camera2);
         if (GeometryUtility.TestPlanesAABB(CameraFrustum, bounds))
         {
-            renderer.sharedMaterial.color = Color.green;
+            rendererV.sharedMaterial.color = Color.green;
         }
         else
         {
-            renderer.sharedMaterial.color = Color.red;
+            rendererV.sharedMaterial.color = Color.red;
         }
     }
 }
