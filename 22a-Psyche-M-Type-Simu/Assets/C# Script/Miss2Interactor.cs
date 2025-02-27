@@ -22,6 +22,18 @@ public class Miss2Interactor : MonoBehaviour
     private bool isCamModeActive = false;
 
     [SerializeField] private GameObject target1;
+    [SerializeField] private GameObject target2;
+    [SerializeField] private GameObject target3;
+    [SerializeField] protected GameObject Status0;
+    [SerializeField] protected GameObject Status1;
+    [SerializeField] protected GameObject Status2;
+    [SerializeField] protected GameObject Status3;
+    [SerializeField] protected GameObject LevelCompleteScreen;
+
+
+    //ObjectCameraDetection script2 = target2.GetComponent<ObjectCameraDetection>();
+    //ObjectCameraDetection script3 = target3.GetComponent<ObjectCameraDetection>();
+
 
 
     //counts the number of interactions the rover has had
@@ -92,20 +104,57 @@ public class Miss2Interactor : MonoBehaviour
             //disables display UI for what key to press and ensures it remains off till needed
             ControlPrompt.SetActive(false);
         }
-        if (interactionCount >= 2)
+        if (interactionCount >= 3)
         {
-            StartCoroutine(LevelCompleteRoutine());
+           LevelCompleteRoutine();
         }
     }
 
     private bool visCheck()
     {
-        Renderer renderer = target1.GetComponent<Renderer>();
-        if (renderer != null)
+        Renderer renderer1 = target1.GetComponent<Renderer>();
+        Renderer renderer2 = target2.GetComponent<Renderer>();
+        Renderer renderer3 = target3.GetComponent<Renderer>();
+        ObjectCameraDetection script1;
+        bool canUse1 = true;
+        bool canUse2 = true;
+        bool canUse3 = true;
+        if (canUse1 == true)
         {
             // Check if the object's color is green
-            if (renderer.sharedMaterial.color.Equals(Color.green))
+            if (renderer1.sharedMaterial.color.Equals(Color.green))
             {
+                target1.GetComponent<Renderer>().material.color = Color.blue;
+                script1 = target1.GetComponent<ObjectCameraDetection>();
+                script1.enabled = false;
+                canUse1 = false;
+
+                return true; // Return true if the object is green
+            }
+        }
+        if (canUse2 == true)
+        {
+            // Check if the object's color is green
+            if (renderer2.sharedMaterial.color.Equals(Color.green))
+            {
+                target2.GetComponent<Renderer>().material.color = Color.blue;
+                script1 = target2.GetComponent<ObjectCameraDetection>();
+                script1.enabled = false;
+                canUse2 = false;
+
+                return true; // Return true if the object is green
+            }
+        }
+        if (canUse3 == true)
+        {
+            // Check if the object's color is green
+            if (renderer3.sharedMaterial.color.Equals(Color.green))
+            {
+                target3.GetComponent<Renderer>().material.color = Color.blue;
+                script1 = target3.GetComponent<ObjectCameraDetection>();
+                script1.enabled = false;
+                canUse3 = false;
+
                 return true; // Return true if the object is green
             }
         }
@@ -150,11 +199,11 @@ public class Miss2Interactor : MonoBehaviour
         }
     }
 
-    private IEnumerator LevelCompleteRoutine()
+    private void LevelCompleteRoutine()
     {
         Debug.Log("Level complete");
-        yield return new WaitForSeconds(3); //lets animation play for 3 secnds
-        //LevelCompleteScreen.SetActive(true);
+        //yield return new WaitForSeconds(1); //lets animation play for 3 secnds
+        LevelCompleteScreen.SetActive(true);
         Time.timeScale = 0f; //pauses further action
     }
 
@@ -164,20 +213,19 @@ public class Miss2Interactor : MonoBehaviour
         switch (interactionCount)
         {
             case 1:
-                //Status0.SetActive(false);
-                //Status1.SetActive(true);
+                Status0.SetActive(false);
+                Status1.SetActive(true);
                 break;
             case 2:
-                //Status1.SetActive(false);
-                //Status2.SetActive(true);
+                Status1.SetActive(false);
+                Status2.SetActive(true);
                 break;
             case 3:
-                //Status2.SetActive(false);
-                ///Status3.SetActive(true);
+                Status2.SetActive(false);
+                Status3.SetActive(true);
                 break;
             default:
-                //Status3.SetActive(false);
-                //StatusComplete.SetActive(true);
+                
                 break;
         }
     }
