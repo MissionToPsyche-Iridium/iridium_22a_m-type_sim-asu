@@ -81,11 +81,11 @@ public class InteractorRover : MonoBehaviour
                 RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
 
                 interactionCount++;
-                missionStatus(interactionCount);
-                Debug.Log(interactionCount);
 
                 StartCoroutine(DisableMovementForSeconds(6));
-
+                
+                missionStatus(interactionCount);
+                Debug.Log(interactionCount);
                 if (interactionCount >= 4)
                 {
                     StartCoroutine(LevelCompleteRoutine());
@@ -116,33 +116,84 @@ public class InteractorRover : MonoBehaviour
     protected virtual IEnumerator LevelCompleteRoutine()
     {
         Debug.Log("Level complete"); 
-        yield return new WaitForSeconds(3); //lets animation play for 3 secnds
+        yield return new WaitForSeconds(6); //lets animation play for 3 secnds
         LevelCompleteScreen.SetActive(true); 
         Time.timeScale = 0f; //pauses further action
     }
 
     protected virtual void missionStatus(int interactionCount)
     {
+
+        float fadeOutDelay = 1.0f;
+        float fadeInDelay = 0.5f;
+
         //mission progress text, changes as the mission progresses\
         switch (interactionCount)
         {
             case 1:
-                Status0.SetActive(false);
-                Status1.SetActive(true);
+                //Status0.SetActive(false);
+                //Status1.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status0, Status1, fadeOutDelay, fadeInDelay));
                 break;
             case 2:
-                Status1.SetActive(false);
-                Status2.SetActive(true);
+                //Status1.SetActive(false);
+                //Status2.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status1, Status2, fadeOutDelay, fadeInDelay));
                 break;
             case 3:
-                Status2.SetActive(false);
-                Status3.SetActive(true);
+                //Status2.SetActive(false);
+                //Status3.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status2, Status3, fadeOutDelay, fadeInDelay));
                 break;
             default:
-                Status3.SetActive(false);
-                StatusComplete.SetActive(true);
+                //Status3.SetActive(false);
+                //StatusComplete.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status3, StatusComplete, fadeOutDelay, fadeInDelay));
                 break;
         }
+    }
+
+    protected IEnumerator FadeTextTransition(GameObject oldText, GameObject newText, float fadeOutDelay = 0.5f, float fadeInDelay = 0.5f) {
+        CanvasGroup oldCanvas = oldText.GetComponent<CanvasGroup>();
+        CanvasGroup newCanvas = newText.GetComponent<CanvasGroup>();
+
+        if (oldCanvas == null) oldCanvas = oldText.AddComponent<CanvasGroup>();
+        if (newCanvas == null) newCanvas = newText.AddComponent<CanvasGroup>();
+
+        float duration = 1.0f; // Duration of fade
+        float elapsedTime = 0f;
+
+        // Ensure old text is visible at start
+        oldCanvas.alpha = 1f;
+        newCanvas.alpha = 0f;
+        newText.SetActive(true);
+
+        // delay to allow rover to mine before update
+        yield return new WaitForSeconds(fadeOutDelay);
+
+        // Fade out old text & fade in new text
+        while (elapsedTime < duration) {
+            elapsedTime += Time.deltaTime;
+            float alpha = 1 - (elapsedTime / duration);
+            oldCanvas.alpha = alpha;
+            yield return null;
+        }
+
+        oldCanvas.alpha = 0f;
+        oldText.SetActive(false); // Deactivate the old text after fading out
+
+        yield return new WaitForSeconds(fadeInDelay);
+
+        elapsedTime = 0f;
+
+        while (elapsedTime < duration) {
+            elapsedTime += Time.deltaTime;
+            float alpha = elapsedTime / duration;
+            newCanvas.alpha = alpha;
+            yield return null;
+        }
+
+        newCanvas.alpha = 1f;
     }
 
     protected virtual void OnDrawGizmos()
