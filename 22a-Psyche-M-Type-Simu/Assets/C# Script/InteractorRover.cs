@@ -28,7 +28,7 @@ public class InteractorRover : MonoBehaviour
 
     //counts the number of interactions the rover has had
     protected int interactionCount = 0;
-    protected void Start()
+    protected virtual void Start()
     {
         if (drillCamera != null && drillCameraUI != null)
         {
