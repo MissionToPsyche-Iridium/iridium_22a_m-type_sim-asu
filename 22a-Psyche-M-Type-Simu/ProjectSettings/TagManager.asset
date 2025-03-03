@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Rock
   - BaseLocation
+  - FinalSpot
   layers:
   - Default
   - TransparentFX
