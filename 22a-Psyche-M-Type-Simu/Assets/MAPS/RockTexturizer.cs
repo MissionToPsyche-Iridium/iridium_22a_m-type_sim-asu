@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class RockTexturizer : EditorWindow
 {
     public Material sharedMaterial;
@@ -51,3 +52,4 @@ public class RockTexturizer : EditorWindow
         Debug.Log("Material applied to all objects with tag: " + objectTag);
     }
 }
+#endif
