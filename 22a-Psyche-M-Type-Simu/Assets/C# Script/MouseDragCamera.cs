@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MouseDragCamera : MonoBehaviour
 {
-    public float rotationSpeed = 5f;
+    /*public float rotationSpeed = 3f;
     private Vector3 lastMousePosition;
     private bool isDragging = false;
 
@@ -32,5 +32,85 @@ public class MouseDragCamera : MonoBehaviour
 
             lastMousePosition = Input.mousePosition;
         }
+    }*/
+    ///*
+    // object that we are orbiting (player)
+    public Transform trackedObject;
+
+    // bounds of input effects on camera
+    public float moveSpeed = 500;
+    public float rotationSpeed = 3f;
+    public float maxDistance = 1f;
+
+    // prevents the camera from flipping too far. 
+    public float minYAngle = -30f;
+    public float maxYAngle = 30f;
+
+    // tracks if we're in orbit mode
+    public bool isOrbiting = false;
+
+    private Vector3 currentOffset;  // offset from player
+    private float currentDistance;  // zoom distance
+    private float currentYRotation; // y-axis rotation angle (pitch)
+    private float currentXRotation; // x-axis rotation angle (yaw)
+
+    //camera controller options function
+    public void OptionsCameraSpeed(float newSpeed)
+    {
+        rotationSpeed = newSpeed;
     }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        currentDistance = maxDistance;
+        currentXRotation = 0f;
+        currentYRotation = 0f;
+        currentOffset = new Vector3(0, 0f, -currentDistance);
+    }
+
+    void LateUpdate()
+    {
+        // zoom in/out with scroll wheel
+        currentDistance += Input.GetAxis("Mouse ScrollWheel") * moveSpeed * Time.deltaTime;
+        currentDistance = Mathf.Clamp(currentDistance, .1f, maxDistance);
+
+        transform.position = Vector3.MoveTowards(transform.position,
+            trackedObject.position - trackedObject.forward * currentDistance,
+            10 * Time.deltaTime);
+
+        // activate orbit mode on right-click
+        if (Input.GetMouseButtonDown(0))
+        {
+            isOrbiting = true;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isOrbiting = false;
+        }
+
+        // rotation handles
+        if (isOrbiting)
+        {
+            // get mouse position
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            // adjust orbit position based on mouse movements
+            currentXRotation += mouseX * rotationSpeed;
+            currentYRotation -= mouseY * rotationSpeed; // inverted
+
+            // clamp vertical rotation to prevent camera flippin gon y axis
+            currentYRotation = Mathf.Clamp(currentYRotation, minYAngle, maxYAngle);
+        }
+
+        Quaternion rotation = Quaternion.Euler(currentYRotation, currentXRotation, 0);
+        currentOffset = new Vector3(0, 0, -currentDistance);
+        Vector3 finalPosition = trackedObject.position + rotation * currentOffset;
+
+        transform.position = finalPosition;
+        transform.LookAt(trackedObject);
+
+    }
+    //*/
 }
