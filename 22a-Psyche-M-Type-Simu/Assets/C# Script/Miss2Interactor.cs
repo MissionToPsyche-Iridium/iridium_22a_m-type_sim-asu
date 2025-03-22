@@ -29,6 +29,7 @@ public class Miss2Interactor : MonoBehaviour
     [SerializeField] protected GameObject Status2;
     [SerializeField] protected GameObject Status3;
     [SerializeField] protected GameObject LevelCompleteScreen;
+    [SerializeField] private GameObject roverCAMmodel;
 
 
     //ObjectCameraDetection script2 = target2.GetComponent<ObjectCameraDetection>();
@@ -76,6 +77,7 @@ public class Miss2Interactor : MonoBehaviour
 
                 //disables movement till animation is complete
                 movementScript.enabled = false;
+                roverCAMmodel.SetActive(false);
 
                 //check if all objectives have been completed
                 
@@ -96,6 +98,8 @@ public class Miss2Interactor : MonoBehaviour
                     interactionCount++;
                     missionStatus(interactionCount);
                     Debug.Log(interactionCount);
+
+                    roverCAMmodel.SetActive(true);
                 }
             }
         }
