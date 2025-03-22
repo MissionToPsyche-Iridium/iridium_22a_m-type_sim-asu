@@ -19,7 +19,7 @@ public class Miss2Interactor : MonoBehaviour
 
     [SerializeField] public Camera mainCamera;
     [SerializeField] public Camera camMode;
-    private bool isCamModeActive = false;
+    [SerializeField] private bool isCamModeActive = false;
 
     [SerializeField] private GameObject target1;
     [SerializeField] private GameObject target2;
@@ -30,6 +30,12 @@ public class Miss2Interactor : MonoBehaviour
     [SerializeField] protected GameObject Status3;
     [SerializeField] protected GameObject LevelCompleteScreen;
     [SerializeField] private GameObject roverCAMmodel;
+    [SerializeField] private GameObject mapmaskUI;
+    [SerializeField] private GameObject mapoutlineUI;
+    [SerializeField] private GameObject ObjectInView;
+    [SerializeField] private GameObject ObjectOutView;
+    [SerializeField] private GameObject CamFrame;
+    bool inCamView = false;
 
 
     //ObjectCameraDetection script2 = target2.GetComponent<ObjectCameraDetection>();
@@ -77,7 +83,7 @@ public class Miss2Interactor : MonoBehaviour
 
                 //disables movement till animation is complete
                 movementScript.enabled = false;
-                roverCAMmodel.SetActive(false);
+                
 
                 //check if all objectives have been completed
                 
@@ -108,9 +114,43 @@ public class Miss2Interactor : MonoBehaviour
             //disables display UI for what key to press and ensures it remains off till needed
             ControlPrompt.SetActive(false);
         }
+
+
         if (interactionCount >= 3)
         {
            LevelCompleteRoutine();
+        }
+
+
+        //ui changes
+        if (isCamModeActive == true)
+        {
+            inCamView = visCheck();
+
+            CamFrame.SetActive(true);
+            roverCAMmodel.SetActive(false) ;
+            mapmaskUI.SetActive(false);
+            mapoutlineUI.SetActive(false);
+
+            if (inCamView)
+            {
+                ObjectInView.SetActive(true);
+                ObjectOutView.SetActive(false);
+            }
+            else
+            {
+                ObjectOutView.SetActive(true);
+                ObjectInView.SetActive(false);
+            }
+        }
+        else
+        {
+            CamFrame.SetActive(false);
+            roverCAMmodel.SetActive(true);
+            mapmaskUI.SetActive(true);
+            mapoutlineUI.SetActive(true);
+            ObjectOutView.SetActive(false);
+            ObjectInView.SetActive(false);
         }
     }
 
