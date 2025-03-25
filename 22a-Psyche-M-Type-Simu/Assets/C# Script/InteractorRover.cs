@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -8,36 +9,63 @@ public class InteractorRover : MonoBehaviour
 {
     public Animator animator;
     // Start is called before the first frame update
-    [SerializeField] private Transform interactionP;
-    [SerializeField] private float interactionR = 0.5f;
-    [SerializeField] private LayerMask interactionM;
-    [SerializeField] GameObject LevelCompleteScreen;
-    [SerializeField] GameObject Status0;
-    [SerializeField] GameObject Status1;
-    [SerializeField] GameObject Status2;
-    [SerializeField] GameObject Status3;
-    [SerializeField] GameObject StatusComplete;
-    [SerializeField] GameObject ControlPrompt;
+    [SerializeField] protected Transform interactionP;
+    [SerializeField] protected float interactionR = 0.5f;
+    [SerializeField] protected LayerMask interactionM;
+    [SerializeField] protected GameObject LevelCompleteScreen;
+    [SerializeField] protected GameObject Status0;
+    [SerializeField] protected GameObject Status1;
+    [SerializeField] protected GameObject Status2;
+    [SerializeField] protected GameObject Status3;
+    [SerializeField] protected Camera drillCamera; 
+    [SerializeField] protected RawImage drillCameraUI;
+    [SerializeField] protected GameObject StatusComplete;
+    [SerializeField] protected GameObject ControlPrompt;
     
     // Add a serialized AudioSource so you can assign it via the Inspector
     [SerializeField] private AudioSource audioSource;
 
-    private readonly Collider[] RovColliders = new Collider[3];
-    [SerializeField] private int numInteractFound;
-    [SerializeField] private MonoBehaviour movementScript;
+    protected readonly Collider[] RovColliders = new Collider[3];
+    [SerializeField] protected int numInteractFound;
+    [SerializeField] protected MonoBehaviour movementScript;
 
     // Counts the number of interactions the rover has had
-    private int interactionCount = 0;
+    protected int interactionCount = 0;
 
-    private void Start()
+    protected virtual void Start()
     {
-        animator = GetComponent<Animator>();
-        Status0.SetActive(true);
+        {
+            if (drillCamera != null && drillCameraUI != null)
+            {
+                drillCamera.enabled = false; // Disable the drill camera initially
+                drillCameraUI.gameObject.SetActive(false); // Hide the UI panel
+            }
+            animator = GetComponent<Animator>();
+            Status0.SetActive(true);
 
-        StartCoroutine(DisableMovementForSeconds(3));
+            StartCoroutine(DisableMovementForSeconds(3));
+        }
     }
 
-    private void Update()
+    protected void ShowDrillCamera()
+    {
+        if (drillCamera != null && drillCameraUI != null)
+        {
+            drillCamera.enabled = true; // Enable the drill camera
+            drillCameraUI.gameObject.SetActive(true); // Show the UI panel
+        }
+    }
+
+    protected void HideDrillCamera()
+    {
+        if (drillCamera != null && drillCameraUI != null)
+        {
+            drillCamera.enabled = false; // Disable the drill camera
+            drillCameraUI.gameObject.SetActive(false); // Hide the UI panel
+        }
+    }
+
+    protected virtual void Update()
     {
         numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
 
@@ -61,6 +89,8 @@ public class InteractorRover : MonoBehaviour
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
 
+                ShowDrillCamera();
+
                 RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
 
                 interactionCount++;
@@ -75,19 +105,24 @@ public class InteractorRover : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            ControlPrompt.SetActive(false);
+        }
     }
 
-    private IEnumerator DisableMovementForSeconds(float seconds)
+    protected IEnumerator DisableMovementForSeconds(float seconds)
     {
         if (movementScript != null)
         {
             movementScript.enabled = false;
             yield return new WaitForSeconds(seconds);
             movementScript.enabled = true;
+            HideDrillCamera();
         }
     }
 
-    private IEnumerator LevelCompleteRoutine()
+    protected virtual IEnumerator LevelCompleteRoutine()
     {
         Debug.Log("Level complete"); 
         yield return new WaitForSeconds(3); // lets animation play for 3 seconds
@@ -95,31 +130,83 @@ public class InteractorRover : MonoBehaviour
         Time.timeScale = 0f; // pauses further action
     }
 
-    private void missionStatus(int interactionCount)
+    protected virtual void missionStatus(int interactionCount)
     {
+        float fadeOutDelay = 1.0f;
+        float fadeInDelay = 0.5f;
         // Mission progress text, changes as the mission progresses
         switch (interactionCount)
         {
             case 1:
-                Status0.SetActive(false);
-                Status1.SetActive(true);
+                //Status0.SetActive(false);
+                //Status1.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status0, Status1, fadeOutDelay, fadeInDelay));
                 break;
             case 2:
-                Status1.SetActive(false);
-                Status2.SetActive(true);
+                //Status1.SetActive(false);
+                //Status2.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status1, Status2, fadeOutDelay, fadeInDelay));
                 break;
             case 3:
-                Status2.SetActive(false);
-                Status3.SetActive(true);
+                //Status2.SetActive(false);
+                //Status3.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status2, Status3, fadeOutDelay, fadeInDelay));
                 break;
             default:
-                Status3.SetActive(false);
-                StatusComplete.SetActive(true);
+                //Status3.SetActive(false);
+                //StatusComplete.SetActive(true);
+                StartCoroutine(FadeTextTransition(Status3, StatusComplete, fadeOutDelay, fadeInDelay));
                 break;
         }
     }
 
-    private void OnDrawGizmos()
+    protected IEnumerator FadeTextTransition(GameObject oldText, GameObject newText, float fadeOutDelay = 0.5f, float fadeInDelay = 0.5f)
+    {
+        CanvasGroup oldCanvas = oldText.GetComponent<CanvasGroup>();
+        CanvasGroup newCanvas = newText.GetComponent<CanvasGroup>();
+
+        if (oldCanvas == null) oldCanvas = oldText.AddComponent<CanvasGroup>();
+        if (newCanvas == null) newCanvas = newText.AddComponent<CanvasGroup>();
+
+        float duration = 1.0f; // Duration of fade
+        float elapsedTime = 0f;
+
+        // Ensure old text is visible at start
+        oldCanvas.alpha = 1f;
+        newCanvas.alpha = 0f;
+        newText.SetActive(true);
+
+        // delay to allow rover to mine before update
+        yield return new WaitForSeconds(fadeOutDelay);
+
+        // Fade out old text & fade in new text
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = 1 - (elapsedTime / duration);
+            oldCanvas.alpha = alpha;
+            yield return null;
+        }
+
+        oldCanvas.alpha = 0f;
+        oldText.SetActive(false); // Deactivate the old text after fading out
+
+        yield return new WaitForSeconds(fadeInDelay);
+
+        elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = elapsedTime / duration;
+            newCanvas.alpha = alpha;
+            yield return null;
+        }
+
+        newCanvas.alpha = 1f;
+    }
+
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(interactionP.position, interactionR);
