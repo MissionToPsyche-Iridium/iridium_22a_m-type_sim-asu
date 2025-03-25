@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -16,35 +16,29 @@ public class InteractorRover : MonoBehaviour
     [SerializeField] protected GameObject Status0;
     [SerializeField] protected GameObject Status1;
     [SerializeField] protected GameObject Status2;
+    [SerializeField] protected Camera drillCamera; // Reference to the drill camera
+    [SerializeField] protected RawImage drillCameraUI; // Reference to the UI panel
     [SerializeField] protected GameObject Status3;
-    [SerializeField] protected Camera drillCamera; 
-    [SerializeField] protected RawImage drillCameraUI;
     [SerializeField] protected GameObject StatusComplete;
     [SerializeField] protected GameObject ControlPrompt;
-    
-    // Add a serialized AudioSource so you can assign it via the Inspector
-    [SerializeField] private AudioSource audioSource;
 
     protected readonly Collider[] RovColliders = new Collider[3];
     [SerializeField] protected int numInteractFound;
     [SerializeField] protected MonoBehaviour movementScript;
 
-    // Counts the number of interactions the rover has had
+    //counts the number of interactions the rover has had
     protected int interactionCount = 0;
-
     protected virtual void Start()
     {
+        if (drillCamera != null && drillCameraUI != null)
         {
-            if (drillCamera != null && drillCameraUI != null)
-            {
-                drillCamera.enabled = false; // Disable the drill camera initially
-                drillCameraUI.gameObject.SetActive(false); // Hide the UI panel
-            }
-            animator = GetComponent<Animator>();
-            Status0.SetActive(true);
-
-            StartCoroutine(DisableMovementForSeconds(3));
+            drillCamera.enabled = false; // Disable the drill camera initially
+            drillCameraUI.gameObject.SetActive(false); // Hide the UI panel
         }
+        animator = GetComponent<Animator>();
+        Status0.SetActive(true);
+
+        StartCoroutine(DisableMovementForSeconds(3));
     }
 
     protected void ShowDrillCamera()
@@ -69,7 +63,7 @@ public class InteractorRover : MonoBehaviour
     {
         numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
 
-        if (numInteractFound > 0)
+        if(numInteractFound > 0)
         {
             var interactable = RovColliders[0].GetComponent<IInteractable>();
 
@@ -77,28 +71,21 @@ public class InteractorRover : MonoBehaviour
 
             if (interactable != null && Input.GetKey(KeyCode.E))
             {
-                // Play the audio when the interaction is triggered
-                if (audioSource != null)
-                {
-                    audioSource.Play();
-                    // Alternatively, if you want to play a one-shot clip:
-                    // audioSource.PlayOneShot(audioSource.clip);
-                }
-                
                 ControlPrompt.SetActive(false);
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
 
+                // Show the drill camera view
                 ShowDrillCamera();
 
                 RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
 
                 interactionCount++;
+
+                StartCoroutine(DisableMovementForSeconds(6));
+                
                 missionStatus(interactionCount);
                 Debug.Log(interactionCount);
-
-                StartCoroutine(DisableMovementForSeconds(4));
-
                 if (interactionCount >= 4)
                 {
                     StartCoroutine(LevelCompleteRoutine());
@@ -116,8 +103,12 @@ public class InteractorRover : MonoBehaviour
         if (movementScript != null)
         {
             movementScript.enabled = false;
+
             yield return new WaitForSeconds(seconds);
+
             movementScript.enabled = true;
+
+            // Hide the drill camera view after movement resumes
             HideDrillCamera();
         }
     }
@@ -125,16 +116,18 @@ public class InteractorRover : MonoBehaviour
     protected virtual IEnumerator LevelCompleteRoutine()
     {
         Debug.Log("Level complete"); 
-        yield return new WaitForSeconds(3); // lets animation play for 3 seconds
+        yield return new WaitForSeconds(6); //lets animation play for 3 secnds
         LevelCompleteScreen.SetActive(true); 
-        Time.timeScale = 0f; // pauses further action
+        Time.timeScale = 0f; //pauses further action
     }
 
     protected virtual void missionStatus(int interactionCount)
     {
+
         float fadeOutDelay = 1.0f;
         float fadeInDelay = 0.5f;
-        // Mission progress text, changes as the mission progresses
+
+        //mission progress text, changes as the mission progresses\
         switch (interactionCount)
         {
             case 1:
@@ -160,8 +153,7 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    protected IEnumerator FadeTextTransition(GameObject oldText, GameObject newText, float fadeOutDelay = 0.5f, float fadeInDelay = 0.5f)
-    {
+    protected IEnumerator FadeTextTransition(GameObject oldText, GameObject newText, float fadeOutDelay = 0.5f, float fadeInDelay = 0.5f) {
         CanvasGroup oldCanvas = oldText.GetComponent<CanvasGroup>();
         CanvasGroup newCanvas = newText.GetComponent<CanvasGroup>();
 
@@ -180,8 +172,7 @@ public class InteractorRover : MonoBehaviour
         yield return new WaitForSeconds(fadeOutDelay);
 
         // Fade out old text & fade in new text
-        while (elapsedTime < duration)
-        {
+        while (elapsedTime < duration) {
             elapsedTime += Time.deltaTime;
             float alpha = 1 - (elapsedTime / duration);
             oldCanvas.alpha = alpha;
@@ -195,8 +186,7 @@ public class InteractorRover : MonoBehaviour
 
         elapsedTime = 0f;
 
-        while (elapsedTime < duration)
-        {
+        while (elapsedTime < duration) {
             elapsedTime += Time.deltaTime;
             float alpha = elapsedTime / duration;
             newCanvas.alpha = alpha;
