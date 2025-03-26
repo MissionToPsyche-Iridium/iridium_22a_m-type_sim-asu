@@ -3,27 +3,37 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    private static AudioManager instance;
-    public AudioMixer audioMixer; // Reference to the AudioMixer
+    public static AudioManager Instance { get; private set; }
+    public AudioMixer audioMixer; 
 
     void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject); // Keeps music playing across scenes
+            Instance = this;
+            DontDestroyOnLoad(gameObject); 
 
             AudioSource audioSource = GetComponent<AudioSource>();
-            audioSource.Play(); // Start playing music
+            audioSource.Play(); 
 
-            // Ensure AudioMixer is updated
-            float savedMusicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-            audioMixer.SetFloat("MusicVolume", Mathf.Log10(savedMusicVolume) * 20);
+
+
+            ApplySavedVolumes();
         }
         else
         {
-            Destroy(gameObject); // Prevent duplicate AudioManagers
+            Destroy(gameObject); 
         }
     }
 
+    public void ApplySavedVolumes()
+    {
+        float savedMusicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        float savedMasterVolume = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
+        float savedSFXVolume = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(savedMusicVolume) * 20);
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(savedMasterVolume) * 20);
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(savedSFXVolume) * 20);
+    }
 }
