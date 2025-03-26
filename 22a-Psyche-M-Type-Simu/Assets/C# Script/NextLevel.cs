@@ -7,6 +7,7 @@ public class NextLevel : MonoBehaviour
 {
     public void nextscene()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
