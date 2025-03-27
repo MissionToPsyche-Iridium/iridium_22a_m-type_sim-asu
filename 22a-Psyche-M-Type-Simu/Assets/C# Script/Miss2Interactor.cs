@@ -116,7 +116,7 @@ public class Miss2Interactor : MonoBehaviour
         }
 
 
-        if (interactionCount >= 3)
+        if (interactionCount >= 1)
         {
            LevelCompleteRoutine();
         }
@@ -165,26 +165,26 @@ public class Miss2Interactor : MonoBehaviour
         bool canUse3 = true;
         if (canUse1 == true)
         {
-            // Check if the object's color is green
+            //check if the object's color is green
             if (renderer1.sharedMaterial.color.Equals(Color.green))
             {
-                return true; // Return true if the object is green
+                return true; //return true if the object is green
             }
         }
         if (canUse2 == true)
         {
-            // Check if the object's color is green
+            //check if the object's color is green
             if (renderer2.sharedMaterial.color.Equals(Color.green))
             {
-                return true; // Return true if the object is green
+                return true; // return true if the object is green
             }
         }
         if (canUse3 == true)
         {
-            // Check if the object's color is green
+            //check if the object's color is green
             if (renderer3.sharedMaterial.color.Equals(Color.green))
             {
-                return true; // Return true if the object is green
+                return true; //return true if the object is green
             }
         }
         return false;
@@ -201,7 +201,7 @@ public class Miss2Interactor : MonoBehaviour
         bool canUse3 = true;
         if (canUse1 == true)
         {
-            // Check if the object's color is green
+            //check if the object's color is green
             if (renderer1.sharedMaterial.color.Equals(Color.green))
             {
                 target1.GetComponent<Renderer>().material.color = Color.blue;
@@ -209,12 +209,12 @@ public class Miss2Interactor : MonoBehaviour
                 script1.enabled = false;
                 canUse1 = false;
 
-                return true; // Return true if the object is green
+                return true; //return true if the object is green
             }
         }
         if (canUse2 == true)
         {
-            // Check if the object's color is green
+            //Check if the object's color is green
             if (renderer2.sharedMaterial.color.Equals(Color.green))
             {
                 target2.GetComponent<Renderer>().material.color = Color.blue;
@@ -222,12 +222,12 @@ public class Miss2Interactor : MonoBehaviour
                 script1.enabled = false;
                 canUse2 = false;
 
-                return true; // Return true if the object is green
+                return true; //Return true if the object is green
             }
         }
         if (canUse3 == true)
         {
-            // Check if the object's color is green
+            //Check if the object's color is green
             if (renderer3.sharedMaterial.color.Equals(Color.green))
             {
                 target3.GetComponent<Renderer>().material.color = Color.blue;
@@ -235,7 +235,7 @@ public class Miss2Interactor : MonoBehaviour
                 script1.enabled = false;
                 canUse3 = false;
 
-                return true; // Return true if the object is green
+                return true; //return true if the object is green
             }
         }
         return false;
@@ -283,8 +283,10 @@ public class Miss2Interactor : MonoBehaviour
     {
         Debug.Log("Level complete");
         //yield return new WaitForSeconds(1); //lets animation play for 3 secnds
+        
         LevelCompleteScreen.SetActive(true);
-        Time.timeScale = 0f; //pauses further action
+        Time.timeScale = 0f;
+        //pauses further action
     }
 
     private void missionStatus(int interactionCount)
