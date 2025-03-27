@@ -32,11 +32,24 @@ public class CameraControls : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {/*
         currentDistance = maxDistance;
         currentXRotation = 0f;
         currentYRotation = 30f;
         currentOffset = new Vector3(0, 5f, -currentDistance);
+        */
+        currentDistance = maxDistance;
+
+        Vector3 offsetDirection = -trackedObject.forward;
+        offsetDirection.y = 0;
+        offsetDirection.Normalize();
+
+        // calculate initial horizontal rotation (Y-axis)
+        currentXRotation = Quaternion.LookRotation(trackedObject.forward).eulerAngles.y;
+        // set a default pitch angle (Y rotation, looking slightly downward)
+        currentYRotation = 30f;
+
+        currentOffset = offsetDirection * currentDistance;
     }
 
     void LateUpdate()
@@ -73,7 +86,8 @@ public class CameraControls : MonoBehaviour
 
         Quaternion rotation = Quaternion.Euler(currentYRotation, currentXRotation, 0);
         currentOffset = new Vector3(0, 0, -currentDistance);
-        Vector3 finalPosition = trackedObject.position + rotation * currentOffset;
+        //Vector3 finalPosition = trackedObject.position + rotation * currentOffset;
+        Vector3 finalPosition = trackedObject.position + Vector3.up + rotation * currentOffset;
 
         transform.position = finalPosition;
         transform.LookAt(trackedObject);

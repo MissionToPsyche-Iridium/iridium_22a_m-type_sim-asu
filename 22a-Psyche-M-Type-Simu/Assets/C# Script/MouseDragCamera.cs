@@ -63,10 +63,25 @@ public class MouseDragCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
         currentDistance = maxDistance;
         currentXRotation = 0f;
         currentYRotation = 0f;
         currentOffset = new Vector3(0, 0f, -currentDistance);
+        */
+
+        currentDistance = maxDistance;
+
+        Vector3 offsetDirection = -trackedObject.forward;
+        offsetDirection.y = 0;
+        offsetDirection.Normalize();
+
+        // calculate initial horizontal rotation (Y-axis)
+        currentXRotation = Quaternion.LookRotation(trackedObject.forward).eulerAngles.y + 180f;
+        // set a default pitch angle (Y rotation, looking slightly downward)
+        currentYRotation = 30f;
+
+        currentOffset = offsetDirection * currentDistance;
     }
 
     void LateUpdate()

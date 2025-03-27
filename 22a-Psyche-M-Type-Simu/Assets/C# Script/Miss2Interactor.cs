@@ -125,7 +125,7 @@ public class Miss2Interactor : MonoBehaviour
         //ui changes
         if (isCamModeActive == true)
         {
-            inCamView = visCheck();
+            inCamView = UICheck();
 
             CamFrame.SetActive(true);
             roverCAMmodel.SetActive(false) ;
@@ -152,6 +152,42 @@ public class Miss2Interactor : MonoBehaviour
             ObjectOutView.SetActive(false);
             ObjectInView.SetActive(false);
         }
+    }
+
+    private bool UICheck()
+    {
+        Renderer renderer1 = target1.GetComponent<Renderer>();
+        Renderer renderer2 = target2.GetComponent<Renderer>();
+        Renderer renderer3 = target3.GetComponent<Renderer>();
+        //ObjectCameraDetection script1;
+        bool canUse1 = true;
+        bool canUse2 = true;
+        bool canUse3 = true;
+        if (canUse1 == true)
+        {
+            // Check if the object's color is green
+            if (renderer1.sharedMaterial.color.Equals(Color.green))
+            {
+                return true; // Return true if the object is green
+            }
+        }
+        if (canUse2 == true)
+        {
+            // Check if the object's color is green
+            if (renderer2.sharedMaterial.color.Equals(Color.green))
+            {
+                return true; // Return true if the object is green
+            }
+        }
+        if (canUse3 == true)
+        {
+            // Check if the object's color is green
+            if (renderer3.sharedMaterial.color.Equals(Color.green))
+            {
+                return true; // Return true if the object is green
+            }
+        }
+        return false;
     }
 
     private bool visCheck()
