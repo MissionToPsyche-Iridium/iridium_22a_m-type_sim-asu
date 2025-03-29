@@ -116,7 +116,7 @@ public class Miss2Interactor : MonoBehaviour
         }
 
 
-        if (interactionCount >= 1)
+        if (interactionCount >= 3)
         {
            LevelCompleteRoutine();
         }
