@@ -36,10 +36,11 @@ public class InteractorRoverMission3 : InteractorRover
         {
             var interactable = RovColliders[0].GetComponent<IInteractable>();
 
+            ControlPrompt.SetActive(true);
+
             // Check if interacting with the base
             if (RovColliders[0].gameObject.CompareTag("BaseLocation"))
-            {
-                ControlPrompt.SetActive(true);
+            {               
                 if (!hasDeployedBase && Input.GetKey(KeyCode.E))
                 {
                     DeployBase();
@@ -51,7 +52,6 @@ public class InteractorRoverMission3 : InteractorRover
             // Check if interacting with the final spot
             if (RovColliders[0].gameObject.CompareTag("FinalSpot"))
             {
-                ControlPrompt.SetActive(true);
                 if (Status5.activeSelf && !missionComplete && Input.GetKey(KeyCode.E))
                 {
                     missionComplete = true; // Mark as interacted
