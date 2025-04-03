@@ -8,12 +8,19 @@ public class MapFunciton : MonoBehaviour
 {
     [SerializeField] protected GameObject mapUI;
     [SerializeField] bool isMapEnabled;
+    [SerializeField] private GameObject playerObject;
+    [SerializeField] private GameObject cameraObject;
+    private ClickMovement CMScript;
+    private CameraControls CCScript;
     private float lastButtonPress = 0f;
     // Start is called before the first frame update
     void Start()
     {
         isMapEnabled = false;
         mapUI.SetActive(false);
+
+        CMScript = playerObject.GetComponent<ClickMovement>();
+        CCScript = cameraObject.GetComponent<CameraControls>();
     }
 
     // Update is called once per frame
@@ -28,6 +35,8 @@ public class MapFunciton : MonoBehaviour
                 isMapEnabled = false;
                 Time.timeScale = 1f;
                 lastButtonPress = Time.unscaledTime;
+                CMScript.enabled = true;
+                CCScript.enabled = true;
             }
             else
             { //opens map and freezes scene whenm m is pressed
@@ -35,6 +44,8 @@ public class MapFunciton : MonoBehaviour
                 isMapEnabled = true;
                 Time.timeScale = 0f;
                 lastButtonPress = Time.unscaledTime;
+                CMScript.enabled = false;
+                CCScript.enabled = false;
             }
         }
     }

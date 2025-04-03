@@ -35,6 +35,9 @@ public class Miss2Interactor : MonoBehaviour
     [SerializeField] private GameObject ObjectInView;
     [SerializeField] private GameObject ObjectOutView;
     [SerializeField] private GameObject CamFrame;
+    [SerializeField] private GameObject MapObject;
+    [SerializeField] private GameObject MapTxt;
+    private MapFunciton MapScript;
     bool inCamView = false;
 
 
@@ -52,6 +55,7 @@ public class Miss2Interactor : MonoBehaviour
         mainCamera.enabled = true;
         camMode.enabled = false;
 
+        MapScript = MapObject.GetComponent<MapFunciton>();
         //StartCoroutine(DisableMovementForSeconds(3));
     }
 
@@ -125,12 +129,14 @@ public class Miss2Interactor : MonoBehaviour
         //ui changes
         if (isCamModeActive == true)
         {
+            MapScript.enabled = false;
             inCamView = UICheck();
 
             CamFrame.SetActive(true);
             roverCAMmodel.SetActive(false) ;
             mapmaskUI.SetActive(false);
             mapoutlineUI.SetActive(false);
+            MapTxt.SetActive(false);
 
             if (inCamView)
             {
@@ -145,6 +151,8 @@ public class Miss2Interactor : MonoBehaviour
         }
         else
         {
+            MapTxt.SetActive(true);
+            MapScript.enabled = true;
             CamFrame.SetActive(false);
             roverCAMmodel.SetActive(true);
             mapmaskUI.SetActive(true);
