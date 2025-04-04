@@ -44,6 +44,7 @@ public class InteractorRoverMission3 : InteractorRover
                 if (!hasDeployedBase && Input.GetKey(KeyCode.E))
                 {
                     DeployBase();
+                    RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
                     ControlPrompt.SetActive(false);
                 }
                 return; // Prevent interaction count increase
