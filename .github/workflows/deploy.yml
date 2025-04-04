@@ -3,8 +3,8 @@ name: Deploy Unity WebGL to GitHub Pages
 on:
   push:
     branches:
-      - build  # Trigger deployment on push to 'build' branch
-  workflow_dispatch:  # Optional: allows manual triggering
+      - build
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,24 +17,23 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v3
         with:
-          lfs: true  # Enable Git LFS support
+          lfs: true
 
-      - name: Setup GitHub Pages
+      - name: Setup Pages
         uses: actions/configure-pages@v3
 
-      - name: Upload Unity Build
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: './Build' 
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
