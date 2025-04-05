@@ -42,7 +42,7 @@ public class InteractorRoverMission3 : InteractorRover
             if (RovColliders[0].gameObject.CompareTag("BaseLocation"))
             {               
                 if (!hasDeployedBase && Input.GetKey(KeyCode.E))
-                {
+                {                
                     DeployBase();
                     RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
                     ControlPrompt.SetActive(false);
@@ -53,9 +53,10 @@ public class InteractorRoverMission3 : InteractorRover
             // Check if interacting with the final spot
             if (RovColliders[0].gameObject.CompareTag("FinalSpot"))
             {
-                if (Status5.activeSelf && !missionComplete && Input.GetKey(KeyCode.E))
+                if (Status5.activeSelf && !missionComplete && Input.GetKeyDown(KeyCode.E))
                 {
                     missionComplete = true; // Mark as interacted
+                    StartCoroutine(FadeTextTransition(Status5, StatusComplete, 1.0f, 0.5f));
                     StartCoroutine(LevelCompleteRoutine()); // Mission complete!
                 }
                 return;
