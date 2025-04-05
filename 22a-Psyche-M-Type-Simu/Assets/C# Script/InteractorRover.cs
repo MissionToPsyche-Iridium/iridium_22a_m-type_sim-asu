@@ -12,14 +12,14 @@ public class InteractorRover : MonoBehaviour
     [SerializeField] protected Transform interactionP;
     [SerializeField] protected float interactionR = 0.5f;
     [SerializeField] protected LayerMask interactionM;
-    [SerializeField] protected GameObject LevelCompleteScreen;
     [SerializeField] protected GameObject Status0;
     [SerializeField] protected GameObject Status1;
     [SerializeField] protected GameObject Status2;
-    [SerializeField] protected Camera drillCamera; // Reference to the drill camera
-    [SerializeField] protected RawImage drillCameraUI; // Reference to the UI panel
     [SerializeField] protected GameObject Status3;
     [SerializeField] protected GameObject StatusComplete;
+    [SerializeField] protected GameObject LevelCompleteScreen;
+    [SerializeField] protected Camera drillCamera; // Reference to the drill camera
+    [SerializeField] protected RawImage drillCameraUI; // Reference to the UI panel
     [SerializeField] protected GameObject ControlPrompt;
 
     protected readonly Collider[] RovColliders = new Collider[3];
