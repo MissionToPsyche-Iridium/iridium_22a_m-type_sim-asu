@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class ClickMovement : MonoBehaviour
 {
@@ -109,10 +110,31 @@ public class ClickMovement : MonoBehaviour
     private float distanceThreshold = 1f; //threshold to consider movement as complete
     private Rigidbody rb;
 
+    //Added for movement sound
+    [SerializeField] private AudioSource movementAudioSource;
+    [SerializeField] private AudioClip movementClip;
+    private Coroutine fadeOutCoroutine; //Track fade coroutine
+    private float movementMaxVolume = 0.09f;
     void Start()
+{
+    rb = GetComponent<Rigidbody>();
+
+    //Ensure only one instance exists
+    if (movementAudioSource != null)
     {
         rb = GetComponent<Rigidbody>();
+        if (movementAudioSource.isPlaying && movementAudioSource.gameObject != this.gameObject)
+        {
+            Destroy(movementAudioSource.gameObject);
+        }
+
+        movementAudioSource.playOnAwake = false;
+        movementAudioSource.loop = true;
+        movementAudioSource.clip = movementClip;
+        movementAudioSource.volume = movementMaxVolume;
     }
+}
+
     void Update()
     {
         //when mouse input is right-click
@@ -125,6 +147,37 @@ public class ClickMovement : MonoBehaviour
         if (isMoving)
         {
             RotateTowardsTarget();
+
+            //Play movement sound while moving
+            if (movementAudioSource != null && !movementAudioSource.isPlaying)
+            {
+                if (fadeOutCoroutine != null)
+                {
+                    StopCoroutine(fadeOutCoroutine); //Cancel fade if resuming movement
+                    fadeOutCoroutine = null;
+                }
+                movementAudioSource.volume = movementMaxVolume; //Reset to capped volume
+                movementAudioSource.Play();
+            }
+        }
+        else
+        {
+            //Fade out movement sound when not moving
+            if (movementAudioSource != null && movementAudioSource.isPlaying && fadeOutCoroutine == null)
+            {
+                fadeOutCoroutine = StartCoroutine(FadeOutAudio(movementAudioSource, 1f));
+            }
+        }
+
+        //Failsafe: stop sound if destination is reached but isMoving wasn't cleared
+        if (isMoving && Vector3.Distance(transform.position, targetPosition) <= distanceThreshold)
+        {
+            isMoving = false;
+
+            if (movementAudioSource != null && movementAudioSource.isPlaying && fadeOutCoroutine == null)
+            {
+                fadeOutCoroutine = StartCoroutine(FadeOutAudio(movementAudioSource, 1f));
+            }
         }
     }
 
@@ -173,5 +226,23 @@ public class ClickMovement : MonoBehaviour
             //once destination is reached, stop
             isMoving = false;
         }
+    }
+
+    //Coroutine for fading out audio
+    private IEnumerator FadeOutAudio(AudioSource audioSource, float duration)
+    {
+        float startVolume = movementMaxVolume; //Use max volume as starting point
+
+        float time = 0f;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0f, time / duration);
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = movementMaxVolume; //Reset to max for next use
+        fadeOutCoroutine = null;
     }
 }

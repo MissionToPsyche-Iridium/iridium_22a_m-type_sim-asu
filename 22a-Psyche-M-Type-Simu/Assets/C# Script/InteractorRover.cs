@@ -28,6 +28,11 @@ public class InteractorRover : MonoBehaviour
 
     //counts the number of interactions the rover has had
     protected int interactionCount = 0;
+
+    //Sound effect components
+    [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected AudioClip interactSound;
+
     protected virtual void Start()
     {
         if (drillCamera != null && drillCameraUI != null)
@@ -74,6 +79,12 @@ public class InteractorRover : MonoBehaviour
                 ControlPrompt.SetActive(false);
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
+
+                //Play interaction sound
+                if (audioSource != null && interactSound != null)
+                {
+                    audioSource.PlayOneShot(interactSound);
+                }
 
                 // Show the drill camera view
                 ShowDrillCamera();
