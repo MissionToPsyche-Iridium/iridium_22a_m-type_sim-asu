@@ -21,9 +21,4 @@ public class PuaseMenuScript : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(sceneID);
     }
-    public void GotoDisclaimer(int sceneID)
-    {
-        PlayerPrefs.SetInt("ShowDisclaimer", 1);
-        SceneManager.LoadScene(sceneID);
-    }
 }

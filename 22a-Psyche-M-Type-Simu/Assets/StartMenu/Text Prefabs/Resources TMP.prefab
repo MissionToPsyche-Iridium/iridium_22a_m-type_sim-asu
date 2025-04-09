@@ -77,7 +77,8 @@ MonoBehaviour:
     \n\nWeiss, Benjamin P., Et al. (2023). \u201CThe Psyche Magnetometry Investigation.\u201D
     Space Science Reviews (2023) 219:22. https://doi.org/10.1007/s11214-023-00965-z\n\nImage
     titled \"Psyche's Magnetometer Integration\", credited to NASA/JPL-Caltech. \n\nOriginal
-    icons by Alex Martynov, Cristian Munoz. Gathered & edited in Figma. "
+    icons by Alex Martynov, Cristian Munoz. Gathered & edited in Figma. \n\n\n\nTODO::
+    ADD MORE SOURCES. "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
