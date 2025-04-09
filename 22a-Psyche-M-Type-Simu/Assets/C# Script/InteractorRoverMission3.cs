@@ -8,15 +8,20 @@ public class InteractorRoverMission3 : InteractorRover
     private bool missionComplete = false;
     public GameObject Status4;
     public GameObject Status5;
-
-    private float lastRightClickTime = 0f;
-    private int rightClickCount = 0;
-    private float doubleClickThreshold = 0.4f; // seconds between clicks for a double-click
-
+    public GameObject Status01;
+    public GameObject obj1;
+    public GameObject obj2;
+    public GameObject obj3;
+    public GameObject finalObj;
 
     protected override void Start()
     {
         base.Start();
+
+        obj1.gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+        obj2.gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+        obj3.gameObject.layer = LayerMask.NameToLayer("Uninteractable");
+        finalObj.gameObject.layer = LayerMask.NameToLayer("Uninteractable");
 
         // Hide HDU at the start
         if (hduObject != null)
@@ -25,7 +30,8 @@ public class InteractorRoverMission3 : InteractorRover
         }
         if (Status4 != null)
         { 
-            Status4.SetActive(true); 
+            Status4.SetActive(true);
+            Status01.SetActive(false);
         }
         if (Status5 != null)
         {
@@ -72,7 +78,7 @@ public class InteractorRoverMission3 : InteractorRover
                     rightClickCount = 0;
                     lastRightClickTime = 0f;
                 }
-                return;
+                return; // Prevent interaction count increase
             }
 
             // --- Interact with FinalSpot ---
@@ -88,7 +94,7 @@ public class InteractorRoverMission3 : InteractorRover
                 return;
             }
 
-            // --- Normal Drill Site Interaction ---
+            // --- Normal drilling interaction ---
             if (interactable != null && (ePressed || doubleRightClicked)) {
                 ControlPrompt.SetActive(false);
                 interactable.Interact(this);
@@ -112,6 +118,11 @@ public class InteractorRoverMission3 : InteractorRover
         }
         else {
             ControlPrompt.SetActive(false);
+        }
+
+        // Unlock the final objective after 3 drill interactions
+        if (interactionCount == 3) {
+            finalObj.gameObject.layer = LayerMask.NameToLayer("Interactable");
         }
     }
 
@@ -137,7 +148,13 @@ public class InteractorRoverMission3 : InteractorRover
         if (Status4 != null)
         {
             Status4.SetActive(false);
+            Status01.SetActive(true);
+
         }
+        //activates mission objectives
+        obj1.gameObject.layer = LayerMask.NameToLayer("Interactable");
+        obj2.gameObject.layer = LayerMask.NameToLayer("Interactable");
+        obj3.gameObject.layer = LayerMask.NameToLayer("Interactable");
     }
 
     protected override void missionStatus(int interactionCount)
@@ -148,7 +165,7 @@ public class InteractorRoverMission3 : InteractorRover
         switch (interactionCount)
         {
             case 1:
-                StartCoroutine(FadeTextTransition(Status0, Status1, fadeOutDelay, fadeInDelay));
+                StartCoroutine(FadeTextTransition(Status01, Status1, fadeOutDelay, fadeInDelay));
                 break;
             case 2:
                 StartCoroutine(FadeTextTransition(Status1, Status2, fadeOutDelay, fadeInDelay));
@@ -159,6 +176,7 @@ public class InteractorRoverMission3 : InteractorRover
         if (interactionCount == 3 && hasDeployedBase)
         {
             StartCoroutine(FadeTextTransition(Status2, Status5, fadeOutDelay, fadeInDelay));
+
         }
     }
 }
