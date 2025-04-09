@@ -9,6 +9,11 @@ public class InteractorRoverMission3 : InteractorRover
     public GameObject Status4;
     public GameObject Status5;
 
+    private float lastRightClickTime = 0f;
+    private int rightClickCount = 0;
+    private float doubleClickThreshold = 0.4f; // seconds between clicks for a double-click
+
+
     protected override void Start()
     {
         base.Start();
@@ -28,42 +33,63 @@ public class InteractorRoverMission3 : InteractorRover
         }
     }
 
-    protected override void Update()
-    {
+    protected override void Update() {
+        // --- Double Right Click Detection ---
+        if (Input.GetMouseButtonDown(1)) // Right-click = button 1
+        {
+            float timeSinceLastClick = Time.time - lastRightClickTime;
+
+            if (timeSinceLastClick <= doubleClickThreshold) {
+                rightClickCount++;
+            }
+            else {
+                rightClickCount = 1;
+            }
+
+            lastRightClickTime = Time.time;
+        }
+
+        // Interaction inputs
+        bool ePressed = Input.GetKey(KeyCode.E);
+        bool doubleRightClicked = rightClickCount >= 2;
+
+        // --- Interactable Detection ---
         numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
 
-        if (numInteractFound > 0)
-        {
+        if (numInteractFound > 0) {
             var interactable = RovColliders[0].GetComponent<IInteractable>();
 
             ControlPrompt.SetActive(true);
 
-            // Check if interacting with the base
-            if (RovColliders[0].gameObject.CompareTag("BaseLocation"))
-            {               
-                if (!hasDeployedBase && Input.GetKey(KeyCode.E))
-                {
+            // --- Interact with BaseLocation ---
+            if (RovColliders[0].gameObject.CompareTag("BaseLocation")) {
+                if (!hasDeployedBase && (ePressed || doubleRightClicked)) {
                     DeployBase();
                     RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
                     ControlPrompt.SetActive(false);
-                }
-                return; // Prevent interaction count increase
-            }
 
-            // Check if interacting with the final spot
-            if (RovColliders[0].gameObject.CompareTag("FinalSpot"))
-            {
-                if (Status5.activeSelf && !missionComplete && Input.GetKey(KeyCode.E))
-                {
-                    missionComplete = true; // Mark as interacted
-                    StartCoroutine(LevelCompleteRoutine()); // Mission complete!
+                    // Reset double-click tracking
+                    rightClickCount = 0;
+                    lastRightClickTime = 0f;
                 }
                 return;
             }
 
-            // Normal drilling interaction
-            if (interactable != null && Input.GetKey(KeyCode.E))
-            {
+            // --- Interact with FinalSpot ---
+            if (RovColliders[0].gameObject.CompareTag("FinalSpot")) {
+                if (Status5.activeSelf && !missionComplete && (ePressed || doubleRightClicked)) {
+                    missionComplete = true;
+                    StartCoroutine(LevelCompleteRoutine());
+
+                    // Reset double-click tracking
+                    rightClickCount = 0;
+                    lastRightClickTime = 0f;
+                }
+                return;
+            }
+
+            // --- Normal Drill Site Interaction ---
+            if (interactable != null && (ePressed || doubleRightClicked)) {
                 ControlPrompt.SetActive(false);
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
@@ -72,16 +98,19 @@ public class InteractorRoverMission3 : InteractorRover
 
                 RovColliders[0].gameObject.layer = LayerMask.NameToLayer("Uninteractable");
 
-                interactionCount++; // Increase count only for drilling spots
+                interactionCount++;
 
                 StartCoroutine(DisableMovementForSeconds(6));
 
                 missionStatus(interactionCount);
                 Debug.Log("Interaction Count: " + interactionCount);
+
+                // Reset double-click tracking
+                rightClickCount = 0;
+                lastRightClickTime = 0f;
             }
         }
-        else
-        {
+        else {
             ControlPrompt.SetActive(false);
         }
     }

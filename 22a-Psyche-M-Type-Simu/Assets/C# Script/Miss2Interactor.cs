@@ -40,10 +40,9 @@ public class Miss2Interactor : MonoBehaviour
     private MapFunciton MapScript;
     bool inCamView = false;
 
-
-    //ObjectCameraDetection script2 = target2.GetComponent<ObjectCameraDetection>();
-    //ObjectCameraDetection script3 = target3.GetComponent<ObjectCameraDetection>();
-
+    private float lastRightClickTime = 0f;
+    private int rightClickCount = 0;
+    private float doubleClickThreshold = 0.4f; // max time between two right-clicks in seconds
 
 
     //counts the number of interactions the rover has had
@@ -59,45 +58,58 @@ public class Miss2Interactor : MonoBehaviour
         //StartCoroutine(DisableMovementForSeconds(3));
     }
 
-    private void Update()
-    {
+    private void Update() {
+        // Detect nearby interactables
         numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
 
-        if (numInteractFound > 0)
+        // Double right-click detection logic
+        if (Input.GetMouseButtonDown(1)) // Right-click = button 1
         {
+            float timeSinceLastClick = Time.time - lastRightClickTime;
+
+            if (timeSinceLastClick <= doubleClickThreshold) {
+                rightClickCount++;
+            }
+            else {
+                rightClickCount = 1;
+            }
+
+            lastRightClickTime = Time.time;
+        }
+
+        // Input tracking
+        bool ePressed = Input.GetKey(KeyCode.E);
+        bool rPressed = Input.GetKey(KeyCode.R);
+        bool doubleRightClicked = rightClickCount >= 2;
+
+        if (numInteractFound > 0) {
             var interactable = RovColliders[0].GetComponent<Miss2IInteractable>();
 
-            ////enables display UI for what key to press to interact with surface
             ControlPrompt.SetActive(true);
 
-            if (interactable != null && Input.GetKey(KeyCode.E))
-            {
-                //disables display UI for what key to press
+            // Interaction with E or double-click
+            if (interactable != null && (ePressed || (doubleRightClicked && !isCamModeActive))) {
                 ControlPrompt.SetActive(false);
-
-                //selects interactable object
                 interactable.Interact(this);
 
-                //starts camera animation
                 animator.SetTrigger("CameraActiv");
 
                 mainCamera.enabled = false;
                 camMode.enabled = true;
                 isCamModeActive = true;
 
-                //disables movement till animation is complete
                 movementScript.enabled = false;
-                
 
-                //check if all objectives have been completed
-                
+                // Reset click tracking
+                rightClickCount = 0;
+                lastRightClickTime = 0f;
             }
-            else if (numInteractFound > 0 && Input.GetKey(KeyCode.R) && isCamModeActive == true) {
 
+            // Exit camera mode with R or double-click (when already in camera mode)
+            else if ((rPressed || (doubleRightClicked && isCamModeActive)) && isCamModeActive) {
                 bool visibility = visCheck();
 
-                if (visibility)
-                {
+                if (visibility) {
                     camMode.enabled = false;
                     mainCamera.enabled = true;
                     isCamModeActive = false;
@@ -110,47 +122,42 @@ public class Miss2Interactor : MonoBehaviour
                     Debug.Log(interactionCount);
 
                     roverCAMmodel.SetActive(true);
+
+                    // Reset click tracking
+                    rightClickCount = 0;
+                    lastRightClickTime = 0f;
                 }
             }
         }
-        else
-        {
-            //disables display UI for what key to press and ensures it remains off till needed
+        else {
             ControlPrompt.SetActive(false);
         }
 
-
-        if (interactionCount >= 3)
-        {
-           LevelCompleteRoutine();
+        if (interactionCount >= 3) {
+            LevelCompleteRoutine();
         }
 
-
-        //ui changes
-        if (isCamModeActive == true)
-        {
+        // UI logic for cam mode
+        if (isCamModeActive) {
             MapScript.enabled = false;
             inCamView = UICheck();
 
             CamFrame.SetActive(true);
-            roverCAMmodel.SetActive(false) ;
+            roverCAMmodel.SetActive(false);
             mapmaskUI.SetActive(false);
             mapoutlineUI.SetActive(false);
             MapTxt.SetActive(false);
 
-            if (inCamView)
-            {
+            if (inCamView) {
                 ObjectInView.SetActive(true);
                 ObjectOutView.SetActive(false);
             }
-            else
-            {
+            else {
                 ObjectOutView.SetActive(true);
                 ObjectInView.SetActive(false);
             }
         }
-        else
-        {
+        else {
             MapTxt.SetActive(true);
             MapScript.enabled = true;
             CamFrame.SetActive(false);
@@ -161,6 +168,7 @@ public class Miss2Interactor : MonoBehaviour
             ObjectInView.SetActive(false);
         }
     }
+
 
     private bool UICheck()
     {

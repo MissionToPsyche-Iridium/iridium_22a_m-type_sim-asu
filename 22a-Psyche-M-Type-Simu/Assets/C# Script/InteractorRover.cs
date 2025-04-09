@@ -26,6 +26,10 @@ public class InteractorRover : MonoBehaviour
     [SerializeField] protected int numInteractFound;
     [SerializeField] protected MonoBehaviour movementScript;
 
+    private float lastRightClickTime = 0f;
+    private int rightClickCount = 0;
+    private float doubleClickThreshold = 0.4f; // seconds
+
     //counts the number of interactions the rover has had
     protected int interactionCount = 0;
     protected virtual void Start()
@@ -59,18 +63,33 @@ public class InteractorRover : MonoBehaviour
         }
     }
 
-    protected virtual void Update()
-    {
+    protected virtual void Update() {
+        // Check for interactables within range
         numInteractFound = Physics.OverlapSphereNonAlloc(interactionP.position, interactionR, RovColliders, interactionM);
 
-        if(numInteractFound > 0)
+        // Right-click detection logic
+        if (Input.GetMouseButtonDown(1)) // Right-click (button 1)
         {
+            float timeSinceLastClick = Time.time - lastRightClickTime;
+            if (timeSinceLastClick <= doubleClickThreshold) {
+                rightClickCount++;
+            }
+            else {
+                rightClickCount = 1;
+            }
+
+            lastRightClickTime = Time.time;
+        }
+
+        bool ePressed = Input.GetKey(KeyCode.E);
+        bool doubleRightClicked = rightClickCount >= 2;
+
+        if (numInteractFound > 0) {
             var interactable = RovColliders[0].GetComponent<IInteractable>();
 
             ControlPrompt.SetActive(true);
 
-            if (interactable != null && Input.GetKey(KeyCode.E))
-            {
+            if (interactable != null && (ePressed || doubleRightClicked)) {
                 ControlPrompt.SetActive(false);
                 interactable.Interact(this);
                 animator.SetTrigger("ActivateDrill");
@@ -83,20 +102,24 @@ public class InteractorRover : MonoBehaviour
                 interactionCount++;
 
                 StartCoroutine(DisableMovementForSeconds(6));
-                
+
                 missionStatus(interactionCount);
                 Debug.Log(interactionCount);
-                if (interactionCount >= 4)
-                {
+
+                if (interactionCount >= 4) {
                     StartCoroutine(LevelCompleteRoutine());
                 }
+
+                // Reset right-click tracking after interaction
+                rightClickCount = 0;
+                lastRightClickTime = 0f;
             }
         }
-        else
-        {
+        else {
             ControlPrompt.SetActive(false);
         }
     }
+
 
     protected IEnumerator DisableMovementForSeconds(float seconds)
     {
