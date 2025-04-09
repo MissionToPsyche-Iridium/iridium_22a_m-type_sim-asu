@@ -27,21 +27,26 @@ public class MapFunciton : MonoBehaviour
     void Update()
     {
         //if m button is pressed and has been greater than 0.3 seconds
-        if ((Input.GetKey(KeyCode.M)) && (Time.unscaledTime - lastButtonPress > 0.3f))
+        if (Input.GetKey(KeyCode.M) && (Time.unscaledTime - lastButtonPress > 0.3f))
         {
-            ToggleMap();
+            if (isMapEnabled)
+            { //closes map and unfreezes the scene when m is pressed
+                mapUI.SetActive(false);
+                isMapEnabled = false;
+                Time.timeScale = 1f;
+                lastButtonPress = Time.unscaledTime;
+                CMScript.enabled = true;
+                CCScript.enabled = true;
+            }
+            else
+            { //opens map and freezes scene whenm m is pressed
+                mapUI.SetActive(true);
+                isMapEnabled = true;
+                Time.timeScale = 0f;
+                lastButtonPress = Time.unscaledTime;
+                CMScript.enabled = false;
+                CCScript.enabled = false;
+            }
         }
-    }
-
-
-
-    public void ToggleMap() {
-        isMapEnabled = !isMapEnabled;
-        mapUI.SetActive(!isMapEnabled);
-        Time.timeScale = 1f;
-
-        lastButtonPress = Time.unscaledTime;
-        CMScript.enabled = isMapEnabled;
-        CCScript.enabled = isMapEnabled;
     }
 }
