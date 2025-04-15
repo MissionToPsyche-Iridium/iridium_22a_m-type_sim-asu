@@ -74,11 +74,21 @@ MonoBehaviour:
     Science 57, Nr 8, 1570-1588 10.1111/maps.13891\n\nTroilite. Mineral information,
     data and localities. (n.d.).  https://www.mindat.org/min-4029.html \n\n[ORIGINAL
     SITE IS NO LONGER ACTIVE. RETRIEVED THROUGH WEB.ARCHIVE.ORG]\n2.2. (n.d.). https://web.archive.org/web/20180507150036/http://webs.ucm.es/info/planetas/programa/tema2/2.2.htm
-    \n\nWeiss, Benjamin P., Et al. (2023). \u201CThe Psyche Magnetometry Investigation.\u201D
+    \n\nJaumann, R., Bell, J. F., Polanskey, C. A., Raymond, C. A., Aspaugh, E.,
+    Bercovici, D., Bills, B. R., Binzel, R., Bottke, W., Christoph, J. M., Marchi,
+    S., Neesemann, A., Otto, K., Park, R. S., Preusker, F., Roatsch, T., Williams,
+    D. A., Wieczorek, M. A., & Zuber, M. T. (2022). The psyche topography and geomorphology
+    investigation. Space Science Reviews, 218(2). https://doi.org/10.1007/s11214-022-00874-7
+    \n\nMarchi, S., Asphaug, E., Bell, J. F., Bottke, W. F., Jaumann, R., Park, R.
+    S., Polanskey, C. A., Prettyman, T. H., Williams, D. A., Binzel, R., Oran, R.,
+    Weiss, B., & Russell, C. T. (2022). Determining the relative cratering ages of
+    regions of Psyche\u2019s surface. Space Science Reviews, 218(4). https://doi.org/10.1007/s11214-022-00891-6
+    \n\nNasa. (n.d.). NASA-3D-Resources/3D models at master \xB7 NASA/NASA-3D-resources.
+    GitHub. https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models\n\nWeiss,
+    Benjamin P., Et al. (2023). \u201CThe Psyche Magnetometry Investigation.\u201D
     Space Science Reviews (2023) 219:22. https://doi.org/10.1007/s11214-023-00965-z\n\nImage
     titled \"Psyche's Magnetometer Integration\", credited to NASA/JPL-Caltech. \n\nOriginal
-    icons by Alex Martynov, Cristian Munoz. Gathered & edited in Figma. \n\n\n\nTODO::
-    ADD MORE SOURCES. "
+    icons by Alex Martynov, Cristian Munoz. Gathered & edited in Figma. "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
